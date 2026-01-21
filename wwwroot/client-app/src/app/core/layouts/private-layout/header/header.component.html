@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+
+    <div class="d-flex order-lg-1">
+      <button class="btn btn-outline-light btn-sm" (click)="logout()">
+        تسجيل خروج
+      </button>
+    </div>    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#navbarNav" aria-controls="navbarNav"
+                      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Center logo (always centered) -->
+    <a class="navbar-brand mx-auto d-flex align-items-center position-absolute start-50 translate-middle-x"
+       routerLink="/dashboard">
+      <img src="assets/images/logo.png" width="40" height="40" class="me-2">
+
+      <!-- Hidden on mobile, visible from lg and up -->
+      <span class="brand-name d-none d-sm-inline me-2 ">
+        Velvet Skin Clinic
+      </span>
+      <img src="assets/images/logo.png" width="40" height="40" class="me-2 d-none d-sm-inline">
+
+    </a>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse order-lg-4" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item pnt">
+          <a class="nav-link" routerLink="/dashboard">الصفحة الرئيسية</a>
+        </li>
+        <li class="nav-item pnt">
+          <a class="nav-link" routerLink="/statistics">الحسابات الشهرية</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

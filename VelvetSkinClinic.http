@@ -1,0 +1,6 @@
+@VelvetSkinClinic_HostAddress = http://localhost:5188
+
+GET {{VelvetSkinClinic_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,25 @@
+h2 {
+  margin-bottom: 20px;
+}
+
+input.form-control {
+  max-width: 400px;
+}
+.custom-btn {
+  background-color: var(--primary-color);
+  ; /* your custom color */
+  border-color: var(--primary-color); /* optional: border same as bg */
+  color: white; /* text color */
+}
+
+  .custom-btn:hover {
+    background-color: #666666; /* slightly darker on hover */
+    border-color: #666666;
+  }
+
+  .custom-btn:disabled {
+    background-color: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    color: #666666;
+  }

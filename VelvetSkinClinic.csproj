@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\ClientApp\**" />
+    <Content Remove="wwwroot\ClientApp\**" />
+    <EmbeddedResource Remove="wwwroot\ClientApp\**" />
+    <None Remove="wwwroot\ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\client-app\src\app\core\layouts\private-layout\header\" />
+    <Folder Include="wwwroot\client-app\src\app\shared\" />
+  </ItemGroup>
+
+</Project>

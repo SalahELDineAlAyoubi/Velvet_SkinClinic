@@ -1,0 +1,12 @@
+
+:root {
+  --primary-color: #851e1f;
+}  
+.pnt {
+  cursor: pointer;
+}
+
+.torignt {
+  direction: rtl;
+  text-align: right;
+}

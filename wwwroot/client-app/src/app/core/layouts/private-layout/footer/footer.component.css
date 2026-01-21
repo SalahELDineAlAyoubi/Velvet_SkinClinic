@@ -1,0 +1,35 @@
+.footer {
+  background: var(--primary-color);
+  color: #fff;
+  padding: 16px 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+  .footer-link:hover {
+    opacity: 0.7;
+  }
+
+.separator {
+  opacity: 0.4;
+}
+
+.footer-copy {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.6;
+}

@@ -1,0 +1,38 @@
+<div class="container mt-4 mb-5 torignt ">
+  <h2>قائمة العملاء</h2>
+
+  <!-- Search bar -->
+  <div class="mb-3">
+<input type="text" class="form-control torignt" placeholder=" بحث ... " [(ngModel)]="searchTerm"    >
+  </div>
+
+  <!-- Clients table -->
+  <div class="table-responsive torignt">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>رقم التعريف الشخصي</th>
+
+          <th>الاسم</th>
+          <th>رقم الهاتف</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of paginatedClients pnt"  (click)="goToClient(client.id)" style="cursor: pointer;">
+          <td>{{ client.id }}</td>
+          <td>{{ client.name }}</td>
+          <td>{{ client.mobile }}</td>
+        </tr>
+</tbody>
+</table>
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between mt-2">
+      <button class="btn custom-btn" (click)="prevPage()" [disabled]="page === 1">السابق</button>
+      <span class="torignt"> الصفحة {{ page }}  من  {{ totalPages }} </span>
+
+      <button class="btn custom-btn" (click)="nextPage()" [disabled]="page === totalPages">التالي</button>
+    </div>
+
+  </div>
+</div>
