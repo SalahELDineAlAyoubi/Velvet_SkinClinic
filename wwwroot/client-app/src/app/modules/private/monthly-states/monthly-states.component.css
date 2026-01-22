@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  font-family: 'Cairo', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.page-header {
+  background: #851e1f;
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+  .page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+.card {
+  background: white;
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  color: #851e1f;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #851e1f;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+  .filter-tabs button {
+    flex: 1;
+    padding: 12px;
+    background: #f0f0f0;
+    color: #333;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s;
+  }
+
+    .filter-tabs button.active {
+      background: #851e1f;
+      color: white;
+      border-color: #851e1f;
+    }
+
+    .filter-tabs button:hover:not(.active) {
+      background: #e0e0e0;
+    }
+
+/* Filter Content */
+.filter-content {
+  margin-bottom: 20px;
+}
+
+.date-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+  }
+
+.date-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Cairo', sans-serif;
+}
+
+  .date-input:focus {
+    outline: none;
+    border-color: #851e1f;
+  }
+
+/* Filter Actions */
+.filter-actions {
+  display: flex;
+  gap: 10px;
+}
+
+  .filter-actions button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s;
+  }
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+  .btn-secondary:hover {
+    background: #5a6268;
+  }
+
+.btn-print {
+  background: #28a745;
+  color: white;
+}
+
+  .btn-print:hover {
+    background: #218838;
+  }
+
+/* Summary Statistics */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.summary-box {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 2px solid #851e1f;
+}
+
+.summary-label {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.summary-amount {
+  color: #851e1f;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Table Styles */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+  .payments-table thead {
+    background: #851e1f;
+    color: white;
+  }
+
+  .payments-table th {
+    padding: 12px;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .payments-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  .payments-table tbody tr:nth-child(odd) {
+    background: white;
+  }
+
+  .payments-table td {
+    padding: 12px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+    color: #333;
+  }
+
+  .payments-table tfoot {
+    background: #f0f0f0;
+    font-weight: bold;
+  }
+
+.total-row td {
+  padding: 15px 12px;
+  border-top: 2px solid #851e1f;
+  color: #851e1f;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 30px;
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .container {
+    background: white;
+    padding: 0;
+  }
+
+  .card {
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .page-header {
+    background: #851e1f;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .payments-table thead {
+    background: #851e1f;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .date-range {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payments-table th,
+  .payments-table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}

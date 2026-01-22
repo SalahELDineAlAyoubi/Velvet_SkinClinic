@@ -1,4 +1,117 @@
-<div class="container mt-4 mb-5 torignt ">
-  <h2>قائمة العملاء</h2>
-  s
+<div class="container" dir="rtl">
+  <div class="page-header no-print">
+    <h1>الحسابات الشهرية</h1>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="card no-print">
+    <h2 class="card-title">تصفية حسب التاريخ</h2>
+
+    <!-- Filter Type Selection -->
+    <div class="filter-tabs">
+      <button [class.active]="filterType === 'month'"
+              (click)="filterType = 'month'"
+              type="button">
+        اختيار شهر
+      </button>
+      <button [class.active]="filterType === 'range'"
+              (click)="filterType = 'range'"
+              type="button">
+        نطاق تاريخ مخصص
+      </button>
+    </div>
+
+    <!-- Month Selector -->
+    <div class="filter-content" *ngIf="filterType === 'month'">
+      <div class="form-group">
+        <label>اختر الشهر:</label>
+        <input type="month"
+               [(ngModel)]="selectedMonth"
+               class="date-input">
+      </div>
+    </div>
+
+    <!-- Date Range Selector -->
+    <div class="filter-content" *ngIf="filterType === 'range'">
+      <div class="date-range">
+        <div class="form-group">
+          <label>من تاريخ:</label>
+          <input type="date"
+                 [(ngModel)]="startDate"
+                 class="date-input">
+        </div>
+        <div class="form-group">
+          <label>إلى تاريخ:</label>
+          <input type="date"
+                 [(ngModel)]="endDate"
+                 class="date-input">
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <button (click)="resetFilters()" type="button" class="btn-secondary">
+        إعادة تعيين
+      </button>
+      <button (click)="printReport()" type="button" class="btn-print">
+        طباعة التقرير
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Statistics -->
+  <div class="card">
+    <h2 class="card-title">ملخص الفترة: {{ periodDescription }}</h2>
+    <div class="summary-grid">
+      <div class="summary-box">
+        <div class="summary-label">إجمالي المدفوعات</div>
+        <div class="summary-amount">{{ totalAmount | number:'1.2-2' }} $</div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-label">عدد الدفعات</div>
+        <div class="summary-amount">{{ totalPayments }}</div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-label">عدد العملاء</div>
+        <div class="summary-amount">{{ uniqueClients }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payments Table -->
+  <div class="card">
+    <h2 class="card-title">سجل المدفوعات</h2>
+    <div class="table-wrapper">
+      <table class="payments-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اسم العميل</th>
+            <th>رقم الدفعة</th>
+            <th>المبلغ</th>
+            <th>التاريخ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of sortedPayments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ payment.clientName }}</td>
+            <td>{{ payment.paymentNumber }}</td>
+            <td>{{ payment.amount | number:'1.2-2' }} $</td>
+            <td>{{ formatDate(payment.date) }}</td>
+          </tr>
+          <tr *ngIf="filteredPayments.length === 0">
+            <td colspan="5" class="empty">لا توجد مدفوعات في هذه الفترة</td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="filteredPayments.length > 0">
+          <tr class="total-row">
+            <td colspan="3"><strong>الإجمالي:</strong></td>
+            <td><strong>{{ totalAmount | number:'1.2-2' }} $</strong></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 </div>
