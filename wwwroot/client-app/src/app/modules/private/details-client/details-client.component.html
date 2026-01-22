@@ -1,4 +1,3 @@
- 
 <div class="container" dir="rtl">
   <div class="page-header">
     <h1>تفاصيل العميل</h1>
@@ -6,31 +5,78 @@
 
   <!-- Client Details -->
   <div class="card">
-    <h2 class="card-title">المعلومات الشخصية</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 class="card-title" style="margin: 0;">المعلومات الشخصية</h2>
+      <button type="button" (click)="toggleEditInfo()" style="width: auto; padding: 8px 20px; font-size: 0.9rem;">
+        {{ isEditingInfo ? 'حفظ' : 'تعديل' }}
+      </button>
+    </div>
+
     <div class="info-row">
       <span class="label">الاسم:</span>
-      <span class="value">{{ client.name }}</span>
+      <span class="value" *ngIf="!isEditingInfo">{{ client.name }}</span>
+      <input *ngIf="isEditingInfo"
+             type="text"
+             [(ngModel)]="client.name"
+             class="edit-input">
     </div>
+
     <div class="info-row">
       <span class="label">رقم الهوية:</span>
       <span class="value">{{ client.id }}</span>
     </div>
-    <div class="info-row" >
+
+    <div class="info-row">
       <span class="label">رقم الهاتف:</span>
-      <span class="value" dir="ltr">{{ client.phone }}</span>
+      <span class="value" dir="ltr" *ngIf="!isEditingInfo">{{ client.phone }}</span>
+      <input *ngIf="isEditingInfo"
+             type="text"
+             [(ngModel)]="client.phone"
+             class="edit-input"
+             dir="ltr">
     </div>
+
     <div class="info-row">
       <span class="label">تاريخ الميلاد:</span>
-      <span class="value">{{ client.birthday }}</span>
+      <span class="value" *ngIf="!isEditingInfo">{{ client.birthday }}</span>
+      <input *ngIf="isEditingInfo"
+             type="text"
+             [(ngModel)]="client.birthday"
+             class="edit-input">
     </div>
   </div>
 
   <!-- Services -->
   <div class="card">
-    <h2 class="card-title">الخدمات </h2>
+    <h2 class="card-title">الخدمات</h2>
+
+    <!-- Add Service Dropdown -->
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+      <select [(ngModel)]="selectedService"
+              class="service-select">
+        <option value="">اختر خدمة جديدة</option>
+        <option *ngFor="let service of availableServicesToAdd" [value]="service">
+          {{ service }}
+        </option>
+      </select>
+      <button type="button"
+              (click)="addService()"
+              [disabled]="!selectedService"
+              style="width: auto; padding: 8px 20px;">
+        إضافة
+      </button>
+    </div>
+
+    <!-- Services List -->
     <div class="services">
-      <span class="service-badge" *ngFor="let service of client.services">
+      <span class="service-badge" *ngFor="let service of client.services" >
+
         {{ service }}
+        <button type="button"
+                (click)="removeService(service)"
+                class="remove-service-btn">
+          ×
+        </button>
       </span>
     </div>
   </div>
@@ -49,7 +95,7 @@
       </div>
       <div class="summary-box">
         <div class="summary-label">المتبقي</div>
-        <div class="summary-amount">{{ remainingAmount |number:'1.2-2' }} $</div>
+        <div class="summary-amount">{{ remainingAmount | number:'1.2-2' }} $</div>
       </div>
     </div>
   </div>
@@ -64,16 +110,55 @@
             <th>رقم الدفعة</th>
             <th>المبلغ</th>
             <th>التاريخ</th>
+            <th>إجراءات</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let payment of client.payments; let i = index">
+          <tr *ngFor="let payment of client.payments">
             <td>{{ payment.paymentNumber }}</td>
-            <td>{{ payment.amount | number:'1.2-2' }} $</td>
-            <td>{{ payment.date }}</td>
+            <td>
+              <span *ngIf="editingPaymentId !== payment.paymentNumber">
+                {{ payment.amount | number:'1.2-2' }} $
+              </span>
+              <input *ngIf="editingPaymentId === payment.paymentNumber"
+                     type="number"
+                     [(ngModel)]="payment.amount"
+                     class="edit-input-table"
+                     step="0.01">
+            </td>
+            <td>
+              <span *ngIf="editingPaymentId !== payment.paymentNumber">
+                {{ payment.date }}
+              </span>
+              <input *ngIf="editingPaymentId === payment.paymentNumber"
+                     type="date"
+                     [(ngModel)]="payment.date"
+                     class="edit-input-table">
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button *ngIf="editingPaymentId !== payment.paymentNumber"
+                        type="button"
+                        (click)="editPayment(payment)"
+                        class="btn-edit">
+                  تعديل
+                </button>
+                <button *ngIf="editingPaymentId === payment.paymentNumber"
+                        type="button"
+                        (click)="savePayment(payment)"
+                        class="btn-save">
+                  حفظ
+                </button>
+                <button type="button"
+                        (click)="deletePayment(payment)"
+                        class="btn-delete">
+                  حذف
+                </button>
+              </div>
+            </td>
           </tr>
           <tr *ngIf="client.payments.length === 0">
-            <td colspan="3" class="empty">لا توجد مدفوعات</td>
+            <td colspan="4" class="empty">لا توجد مدفوعات</td>
           </tr>
         </tbody>
       </table>
@@ -85,7 +170,7 @@
     <h2 class="card-title">إضافة دفعة جديدة</h2>
     <form (ngSubmit)="addPayment()" #paymentForm="ngForm">
       <div class="form-group">
-        <label>المبلغ (ر.س)</label>
+        <label>المبلغ ($)</label>
         <input type="number"
                [(ngModel)]="newPaymentAmount"
                name="amount"

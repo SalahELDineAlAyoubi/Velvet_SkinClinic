@@ -72,14 +72,7 @@
   gap: 10px;
 }
 
-.service-badge {
-  background: #851e1f;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
+ 
 
 /* Summary */
 .summary-grid {
@@ -210,7 +203,127 @@ button {
   font-weight: 600;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+.edit-input {
+  width: 60%;
+  padding: 8px;
+  border: 2px solid #851e1f;
+  border-radius: 3px;
+  font-size: 1rem;
+  font-family: 'Cairo', sans-serif;
+}
+/* Service Select */
+.service-select {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Cairo', sans-serif;
+  background: white;
+}
+/* Service Badge with Remove Button */
+.service-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #851e1f;
+  color: white;
+  padding: 8px 35px 8px 16px; /* Added padding-left for the X button */
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+ 
+/* Table Edit Inputs */
+.edit-input-table {
+  width: 100%;
+  padding: 6px;
+  border: 2px solid #851e1f;
+  border-radius: 3px;
+  font-family: 'Cairo', sans-serif;
+}
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+.btn-edit,
+.btn-save,
+.btn-delete {
+  width: auto;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
 
+.btn-edit {
+  background: #007bff;
+}
+
+  .btn-edit:hover {
+    background: #0056b3;
+  }
+
+.btn-save {
+  background: #28a745;
+}
+
+  .btn-save:hover {
+    background: #218838;
+  }
+
+.btn-delete {
+  background: #dc3545;
+}
+
+  .btn-delete:hover {
+    background: #c82333;
+  }
+/* Table Header - Adding Actions Column */
+thead th:last-child {
+  width: 150px;
+}
+
+  .service-select:focus {
+    outline: none;
+    border-color: #851e1f;
+  }
+
+/* Remove Service Button */
+/* Service Badge with Remove Button */
+.service-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: #851e1f;
+  color: white;
+   border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.remove-service-btn {
+  position: absolute;
+  right: 8px; /* Changed to right for RTL */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+  .remove-service-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
 /* Responsive */
 @media (max-width: 768px) {
   .container {
