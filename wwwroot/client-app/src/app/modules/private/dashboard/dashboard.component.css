@@ -7,8 +7,7 @@ input.form-control {
 }
 .custom-btn {
   background-color: var(--primary-color);
-  ; /* your custom color */
-  border-color: var(--primary-color); /* optional: border same as bg */
+   border-color: var(--primary-color); /* optional: border same as bg */
   color: white; /* text color */
 }
 
@@ -22,4 +21,13 @@ input.form-control {
     border-color: #cccccc;
     cursor: not-allowed;
     color: #666666;
+  }
+.table-responsive .table .custom-header {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+  .table-responsive .table .custom-header th {
+    background-color: var(--primary-color) !important;
+    color: white !important;
   }
