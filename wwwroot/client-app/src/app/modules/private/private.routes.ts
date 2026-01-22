@@ -22,6 +22,12 @@ export const PRIVATE_ROUTES: Routes = [
             .then(c => c.MonthlyStatesComponent)
       },
       {
+        path: 'services',
+        loadComponent: () =>
+          import('./services/services.component')
+            .then(c => c.ServicesComponent)
+      },
+      {
         path: 'clients/:id',
         loadComponent: () =>
           import('./details-client/details-client.component')

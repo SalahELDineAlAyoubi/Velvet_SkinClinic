@@ -1,0 +1,217 @@
+<div class="container" dir="rtl">
+  <div class="page-header">
+    <h1>إدارة الخدمات</h1>
+    <p class="subtitle">إضافة وتعديل وحذف الخدمات المتاحة</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📋</div>
+      <div class="stat-info">
+        <div class="stat-label">إجمالي الخدمات</div>
+        <div class="stat-value">{{ totalServices }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-info">
+        <div class="stat-label">إجمالي الأسعار</div>
+        <div class="stat-value">{{ totalRevenue | number:'1.2-2' }} $</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <div class="stat-label">الفئات</div>
+        <div class="stat-value">{{ categories.length }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter and Add Section -->
+  <div class="card">
+    <div class="controls-section">
+      <div class="filters">
+        <input type="text"
+               class="search-input"
+               placeholder="🔍 ابحث عن خدمة..."
+               [(ngModel)]="searchTerm">
+
+        <select class="category-select"
+                [(ngModel)]="selectedCategory">
+          <option value="">جميع الفئات</option>
+          <option *ngFor="let cat of categories" [value]="cat">
+            {{ cat }} ({{ getCategoryCount(cat) }})
+          </option>
+        </select>
+
+        <button type="button"
+                class="btn-reset"
+                (click)="resetFilters()"
+                *ngIf="searchTerm || selectedCategory">
+          إعادة تعيين
+        </button>
+      </div>
+
+      <button type="button"
+              class="btn-add"
+              (click)="toggleAddForm()">
+        {{ showAddForm ? '✕ إلغاء' : '+ إضافة خدمة جديدة' }}
+      </button>
+    </div>
+
+    <!-- Add Service Form -->
+    <div class="add-form" *ngIf="showAddForm">
+      <h3 class="form-title">إضافة خدمة جديدة</h3>
+      <form (ngSubmit)="addService()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>اسم الخدمة <span class="required">*</span></label>
+            <input type="text"
+                   [(ngModel)]="newService.name"
+                   name="name"
+                   placeholder="مثال: Hifu"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>الفئة <span class="required">*</span></label>
+            <select [(ngModel)]="newService.category" name="category" required>
+              <option value="">اختر الفئة</option>
+              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>السعر ($) <span class="required">*</span></label>
+            <input type="number"
+                   [(ngModel)]="newService.price"
+                   name="price"
+                   placeholder="0.00"
+                   step="0.01"
+                   min="0"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>المدة</label>
+            <input type="text"
+                   [(ngModel)]="newService.duration"
+                   name="duration"
+                   placeholder="مثال: 30 دقيقة">
+          </div>
+
+          <div class="form-group full-width">
+            <label>الوصف</label>
+            <textarea [(ngModel)]="newService.description"
+                      name="description"
+                      rows="3"
+                      placeholder="وصف مختصر للخدمة..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="toggleAddForm()">
+            إلغاء
+          </button>
+          <button type="submit" class="btn-submit">
+            حفظ الخدمة
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Services List -->
+  <div class="services-grid">
+    <div class="service-card" *ngFor="let service of filteredServices">
+      <!-- Edit Mode -->
+      <div *ngIf="editingService?.id === service.id" class="edit-mode">
+        <h3 class="form-title">تعديل الخدمة</h3>
+        <form (ngSubmit)="saveEdit()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>اسم الخدمة</label>
+              <input type="text" [(ngModel)]="editingService!.name" name="editName" required>
+            </div>
+
+            <div class="form-group">
+              <label>الفئة</label>
+              <select [(ngModel)]="editingService!.category" name="editCategory" required>
+                <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>السعر ($)</label>
+              <input type="number" [(ngModel)]="editingService!.price" name="editPrice" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+              <label>المدة</label>
+              <input type="text" [(ngModel)]="editingService!.duration" name="editDuration">
+            </div>
+
+            <div class="form-group full-width">
+              <label>الوصف</label>
+              <textarea [(ngModel)]="editingService!.description" name="editDesc" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="cancelEdit()">
+              إلغاء
+            </button>
+            <button type="submit" class="btn-submit">
+              حفظ التغييرات
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- View Mode -->
+      <div *ngIf="editingService?.id !== service.id" class="view-mode">
+        <div class="service-header">
+          <div>
+            <h3 class="service-name">{{ service.name }}</h3>
+            <span class="service-category">{{ service.category }}</span>
+          </div>
+          <div class="service-price">{{ service.price | number:'1.2-2' }} $</div>
+        </div>
+
+        <p class="service-description" *ngIf="service.description">
+          {{ service.description }}
+        </p>
+
+        <div class="service-meta">
+          <span class="meta-item" *ngIf="service.duration">
+            ⏱️ {{ service.duration }}
+          </span>
+        </div>
+
+        <div class="service-actions">
+          <button type="button" class="btn-edit" (click)="startEdit(service)">
+            ✏️ تعديل
+          </button>
+          <button type="button" class="btn-delete" (click)="deleteService(service)">
+            🗑️ حذف
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredServices.length === 0">
+      <span class="empty-icon">📭</span>
+      <p>لا توجد خدمات</p>
+      <small *ngIf="searchTerm || selectedCategory">حاول تغيير معايير البحث</small>
+      <small *ngIf="!searchTerm && !selectedCategory">ابدأ بإضافة خدمة جديدة</small>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-msg" *ngIf="showSuccess">
+    {{ successMessage }} ✓
+  </div>
+</div>
