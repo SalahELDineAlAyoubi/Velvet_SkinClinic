@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
- 
+
 interface Client {
   id: number;
   name: string;
@@ -135,6 +135,18 @@ export class DashboardComponent {
   page: number = 1;
   pageSize: number = 10;
 
+  // Add client form
+  showAddModal: boolean = false;
+  newClient = {
+    name: '',
+    mobile: ''
+  };
+  formErrors = {
+    name: '',
+    mobile: ''
+  };
+  showSuccess: boolean = false;
+
   get paginatedClients(): Client[] {
     if (this.page > this.totalPages) this.page = this.totalPages || 1;
     const start = (this.page - 1) * this.pageSize;
@@ -152,9 +164,11 @@ export class DashboardComponent {
   prevPage() {
     if (this.page > 1) this.page--;
   }
+
   goToClient(id: string | number) {
     this.router.navigate(['/clients', id]);
   }
+
   get filteredClients(): Client[] {
     if (!this.searchTerm) return this.clients;
     return this.clients.filter(c =>
@@ -162,5 +176,105 @@ export class DashboardComponent {
       c.mobile.includes(this.searchTerm) ||
       c.id.toString().includes(this.searchTerm)
     );
+  }
+
+  // Validate Lebanese phone number
+  validateLebanesePhone(phone: string): boolean {
+    const cleanPhone = phone.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+    const mobilePattern = /^(03|70|71|76|78|79|81)\d{6}$/;
+    const landlinePattern = /^(01|04|05|06|07|09)\d{6}$/;
+    return mobilePattern.test(cleanPhone) || landlinePattern.test(cleanPhone);
+  }
+
+  // Open add client modal
+  openAddModal() {
+    this.showAddModal = true;
+    this.resetForm();
+  }
+
+  // Close add client modal
+  closeAddModal() {
+    this.showAddModal = false;
+    this.resetForm();
+  }
+
+  // Reset form
+  resetForm() {
+    this.newClient = { name: '', mobile: '' };
+    this.formErrors = { name: '', mobile: '' };
+  }
+
+  // Validate form
+  validateForm(): boolean {
+    let isValid = true;
+    this.formErrors = { name: '', mobile: '' };
+
+    // Validate name
+    if (!this.newClient.name.trim()) {
+      this.formErrors.name = 'الاسم مطلوب';
+      isValid = false;
+    } else if (this.newClient.name.trim().length < 3) {
+      this.formErrors.name = 'الاسم يجب أن يكون 3 أحرف على الأقل';
+      isValid = false;
+    }
+
+    // Validate mobile
+    if (!this.newClient.mobile.trim()) {
+      this.formErrors.mobile = 'رقم الهاتف مطلوب';
+      isValid = false;
+    } else if (!this.validateLebanesePhone(this.newClient.mobile)) {
+      this.formErrors.mobile = 'رقم الهاتف غير صحيح. يجب أن يكون رقم لبناني صحيح';
+      isValid = false;
+    }
+
+    // Check for duplicate mobile
+    const cleanNewMobile = this.newClient.mobile.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+    const isDuplicate = this.clients.some(c => {
+      const cleanExistingMobile = c.mobile.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+      return cleanExistingMobile === cleanNewMobile;
+    });
+
+    if (isDuplicate) {
+      this.formErrors.mobile = 'رقم الهاتف مسجل مسبقاً';
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  // Add new client
+  addClient() {
+    if (!this.validateForm()) {
+      return;
+    }
+
+    // Generate new ID
+    const maxId = Math.max(...this.clients.map(c => c.id), 0);
+    const newId = maxId + 1;
+
+    // Create new client
+    const client: Client = {
+      id: newId,
+      name: this.newClient.name.trim(),
+      mobile: this.newClient.mobile.trim()
+    };
+
+    // Add to clients array
+    this.clients.push(client);
+
+    // Sort clients by ID
+    this.clients.sort((a, b) => a.id - b.id);
+
+    // Show success message
+    this.showSuccess = true;
+    setTimeout(() => {
+      this.showSuccess = false;
+    }, 3000);
+
+    // Close modal
+    this.closeAddModal();
+
+    // Navigate to last page to see new client
+    this.page = this.totalPages;
   }
 }

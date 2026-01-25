@@ -1,7 +1,15 @@
 <div class="container" dir="rtl">
   <div class="page-header">
-    <h1>قائمة العملاء</h1>
-    <p class="subtitle">إدارة ومتابعة جميع العملاء</p>
+    <div class="header-content">
+      <div>
+        <h1>قائمة العملاء</h1>
+        <p class="subtitle">إدارة ومتابعة جميع العملاء</p>
+      </div>
+      <button class="btn-add-client" (click)="openAddModal()">
+        <span class="plus-icon">+</span>
+        إضافة عميل جديد
+      </button>
+    </div>
   </div>
 
   <!-- Search and Stats Card -->
@@ -35,8 +43,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let client of paginatedClients"
-              class="client-row"
-              >
+              class="client-row">
             <td><span class="client-id">{{ client.id }}</span></td>
             <td><strong>{{ client.name }}</strong></td>
             <td dir="ltr" class="mobile">{{ client.mobile }}</td>
@@ -66,18 +73,70 @@
               [disabled]="page === 1">
         ← السابق
       </button>
-
       <div class="page-info">
         <span class="current-page">{{ page }}</span>
         <span class="separator">من</span>
         <span class="total-pages">{{ totalPages }}</span>
       </div>
-
       <button class="pagination-btn"
               (click)="nextPage()"
               [disabled]="page === totalPages">
         التالي →
       </button>
     </div>
+  </div>
+
+  <!-- Add Client Modal -->
+  <div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>إضافة عميل جديد</h2>
+        <button class="btn-close" (click)="closeAddModal()">×</button>
+      </div>
+
+      <form (ngSubmit)="addClient()" #clientForm="ngForm">
+        <div class="form-group">
+          <label for="clientName">الاسم الكامل <span class="required">*</span></label>
+          <input type="text"
+                 id="clientName"
+                 [(ngModel)]="newClient.name"
+                 name="name"
+                 class="form-input"
+                 [class.input-error]="formErrors.name"
+                 placeholder="أدخل الاسم الكامل"
+                 required>
+          <div class="error-message" *ngIf="formErrors.name">{{ formErrors.name }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="clientMobile">رقم الهاتف <span class="required">*</span></label>
+          <input type="text"
+                 id="clientMobile"
+                 [(ngModel)]="newClient.mobile"
+                 name="mobile"
+                 class="form-input"
+                 [class.input-error]="formErrors.mobile"
+                 placeholder="03 XXX XXX"
+                 dir="ltr"
+                 required>
+          <div class="error-message" *ngIf="formErrors.mobile">{{ formErrors.mobile }}</div>
+          <div class="phone-hint">الأرقام المقبولة: 03, 70, 71, 76, 78, 79, 81 (موبايل) أو 01, 04, 05, 06, 07, 09 (أرضي)</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeAddModal()">
+            إلغاء
+          </button>
+          <button type="submit" class="btn-submit">
+            إضافة العميل
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-msg" *ngIf="showSuccess">
+    تم إضافة العميل بنجاح ✓
   </div>
 </div>
