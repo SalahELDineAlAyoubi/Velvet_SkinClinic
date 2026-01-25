@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 :root {
   --primary-color: #851e1f;
   --primary-hover: #6b1819;
@@ -39,3 +39,4 @@ app-public-header {
   width: 100%; /* Full width */
   z-index: 1000; /* On top of everything */
 }
+
