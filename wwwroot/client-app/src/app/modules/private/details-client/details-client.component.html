@@ -1,6 +1,11 @@
 <div class="container" dir="rtl">
   <div class="page-header">
-    <h1>تفاصيل العميل</h1>
+    <div class="header-content">
+      <h1>تفاصيل العميل</h1>
+      <button type="button" (click)="deleteClient()" class="btn-delete-client">
+        🗑️ حذف العميل
+      </button>
+    </div>
   </div>
 
   <!-- Client Details -->
@@ -45,7 +50,7 @@
                class="edit-input"
                dir="ltr">
         <div class="error-message" *ngIf="phoneError">{{ phoneError }}</div>
- 
+
       </div>
     </div>
 

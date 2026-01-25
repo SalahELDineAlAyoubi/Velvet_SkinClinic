@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Payment {
   paymentNumber: number;
@@ -68,8 +69,37 @@ export class DetailsClientComponent {
   phoneError: string = '';
   tempPhone: string = ''; // Temporary storage for phone during editing
 
+  constructor(private router: Router) { }
+
   get remainingAmount(): number {
     return this.client.totalRequired - this.client.totalPaid;
+  }
+
+  // Delete client with confirmation
+  deleteClient(): void {
+    const confirmDelete = confirm(
+      `هل أنت متأكد من حذف العميل "${this.client.name}"؟\n\nسيتم حذف جميع البيانات والمدفوعات المرتبطة بهذا العميل بشكل نهائي.`
+    );
+
+    if (confirmDelete) {
+      // Double confirmation for safety
+      const doubleConfirm = confirm(
+        'تأكيد نهائي: هذا الإجراء لا يمكن التراجع عنه. هل تريد المتابعة؟'
+      );
+
+      if (doubleConfirm) {
+        // In a real app, you would call a service to delete from backend
+        // For now, we'll just navigate back to dashboard
+
+        // TODO: Add actual delete API call here
+        // this.clientService.deleteClient(this.client.id).subscribe(() => {
+        //   this.router.navigate(['/dashboard']);
+        // });
+
+        // Navigate back to dashboard/clients list
+        this.router.navigate(['/dashboard']);
+      }
+    }
   }
 
   // Validate Lebanese phone number
