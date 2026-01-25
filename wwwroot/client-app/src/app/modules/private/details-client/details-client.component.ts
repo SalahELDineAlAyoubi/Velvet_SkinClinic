@@ -249,7 +249,7 @@ export class DetailsClientComponent {
   // Edit payment
   editPayment(payment: Payment): void {
     this.editingPaymentId = payment.paymentNumber;
-  }
+  } 
 
   // Save payment edit
   savePayment(payment: Payment): void {

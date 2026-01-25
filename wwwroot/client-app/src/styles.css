@@ -22,3 +22,20 @@
   direction: rtl;
   text-align: right;
 }
+app-header {
+  position: fixed; /* Fix at top */
+  top: 0; /* Stick to top */
+  left: 0;
+  width: 100%; /* Full width */
+  z-index: 1000; /* On top of everything */
+}
+main.pvcontent {
+  margin-top: 70px; /* Adjust this to your header height */
+}
+app-public-header {
+  position: fixed; /* Fix at top */
+  top: 0; /* Stick to top */
+  left: 0;
+  width: 100%; /* Full width */
+  z-index: 1000; /* On top of everything */
+}
