@@ -1,4 +1,4 @@
- @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 
 * {
   margin: 0;
@@ -53,7 +53,13 @@
   margin-bottom: 10px;
   background: #f9f9f9;
   border-radius: 3px;
+  align-items: flex-start;
 }
+
+  .info-row.error-row {
+    background: #fff5f5;
+    border: 1px solid #ffcccc;
+  }
 
 .label {
   color: #666;
@@ -72,7 +78,7 @@
   gap: 10px;
 }
 
- 
+
 
 /* Summary */
 .summary-grid {
@@ -203,6 +209,7 @@ button {
   font-weight: 600;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
 .edit-input {
   width: 60%;
   padding: 8px;
@@ -211,6 +218,26 @@ button {
   font-size: 1rem;
   font-family: 'Cairo', sans-serif;
 }
+
+  .edit-input.input-error {
+    border-color: #dc3545;
+  }
+
+/* Error message styling */
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+.phone-hint {
+  color: #666;
+  font-size: 0.75rem;
+  margin-top: 5px;
+  font-style: italic;
+}
+
 /* Service Select */
 .service-select {
   flex: 1;
@@ -234,7 +261,7 @@ button {
   font-size: 0.9rem;
   font-weight: 600;
 }
- 
+
 /* Table Edit Inputs */
 .edit-input-table {
   width: 100%;
@@ -249,6 +276,7 @@ button {
   gap: 5px;
   justify-content: center;
 }
+
 .btn-edit,
 .btn-save,
 .btn-delete {
@@ -285,10 +313,10 @@ thead th:last-child {
   width: 150px;
 }
 
-  .service-select:focus {
-    outline: none;
-    border-color: #851e1f;
-  }
+.service-select:focus {
+  outline: none;
+  border-color: #851e1f;
+}
 
 /* Remove Service Button */
 /* Service Badge with Remove Button */
@@ -298,7 +326,7 @@ thead th:last-child {
   align-items: center;
   background: #851e1f;
   color: white;
-   border-radius: 20px;
+  border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -397,15 +425,14 @@ thead th:last-child {
   .summary-box.negative .summary-amount {
     color: #dc3545;
   }
- 
+
 
 /* Phone Container with WhatsApp Button */
 .phone-container {
   display: flex;
   align-items: center;
   gap: 12px;
- 
-  justify-content: space-between;
+   justify-content: space-between;
 }
 
 .whatsapp-btn {
@@ -416,7 +443,7 @@ thead th:last-child {
   border-radius: 8px;
   display: flex;
   align-items: center;
-   cursor: pointer;
+  cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
   font-family: 'Cairo', sans-serif;
@@ -446,8 +473,7 @@ thead th:last-child {
     box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);
   }
 
- 
-
+@media (max-width: 20000px) {
   .whatsapp-btn {
     width: 36px;
     height: 36px;

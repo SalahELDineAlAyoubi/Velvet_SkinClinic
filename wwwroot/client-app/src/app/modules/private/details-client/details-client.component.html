@@ -44,8 +44,8 @@
                [(ngModel)]="client.phone"
                class="edit-input"
                dir="ltr">
-
-
+        <div class="error-message" *ngIf="phoneError">{{ phoneError }}</div>
+ 
       </div>
     </div>
 
