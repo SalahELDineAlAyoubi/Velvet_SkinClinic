@@ -47,7 +47,7 @@ export class DetailsClientComponent {
     'Hifu',
     'BBL',
     'Caviation',
-    'Laser', 
+    'Laser',
     'Botox',
     'Filler',
     'Microneedling',
@@ -63,6 +63,7 @@ export class DetailsClientComponent {
 
   // Edit modes
   isEditingInfo: boolean = false;
+  isEditingTotalRequired: boolean = false;
   editingPaymentId: number | null = null;
 
   get remainingAmount(): number {
@@ -74,6 +75,29 @@ export class DetailsClientComponent {
     return this.availableServices.filter(s => !this.client.services.includes(s));
   }
 
+  // Open WhatsApp chat
+  openWhatsApp(): void {
+    // Remove spaces and special characters from phone number
+    const cleanPhone = this.client.phone.replace(/\s+/g, '').replace(/[^0-9+]/g, '');
+
+    // Add country code if not present (Lebanon +961)
+    let phoneNumber = cleanPhone;
+    if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('961')) {
+      // If number starts with 0, remove it and add +961
+      if (cleanPhone.startsWith('0')) {
+        phoneNumber = '961' + cleanPhone.substring(1);
+      } else {
+        phoneNumber = '961' + cleanPhone;
+      }
+    } else if (cleanPhone.startsWith('+')) {
+      phoneNumber = cleanPhone.substring(1);
+    }
+
+    // Open WhatsApp with the phone number
+    const whatsappUrl = `https://wa.me/${phoneNumber}`;
+    window.open(whatsappUrl, '_blank');
+  }
+
   // Add new service
   addService(): void {
     if (this.selectedService && !this.client.services.includes(this.selectedService)) {
@@ -82,14 +106,32 @@ export class DetailsClientComponent {
     }
   }
 
-  // Remove service
+  // Format amount - removes .00 but keeps decimals when needed
+  formatAmount(amount: number): string {
+    if (amount % 1 === 0) {
+      // Whole number - no decimals
+      return amount.toString();
+    } else {
+      // Has decimals - show up to 2 decimal places
+      return amount.toFixed(2).replace(/\.?0+$/, '');
+    }
+  }
+
+  // Remove service with confirmation
   removeService(service: string): void {
-    this.client.services = this.client.services.filter(s => s !== service);
+    if (confirm(`هل أنت متأكد من حذف خدمة "${service}"؟`)) {
+      this.client.services = this.client.services.filter(s => s !== service);
+    }
   }
 
   // Toggle edit mode for personal info
   toggleEditInfo(): void {
     this.isEditingInfo = !this.isEditingInfo;
+  }
+
+  // Toggle edit mode for total required
+  toggleEditTotalRequired(): void {
+    this.isEditingTotalRequired = !this.isEditingTotalRequired;
   }
 
   // Add payment

@@ -352,3 +352,158 @@ thead th:last-child {
   }
 }
 
+/* Edit Summary Styles */
+.summary-box.editing {
+  border: 2px solid #851e1f;
+  background: #fff9f9;
+}
+
+.summary-amount-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.edit-input-summary {
+  width: 150px;
+  padding: 10px;
+  border: 2px solid #851e1f;
+  border-radius: 5px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  color: #851e1f;
+}
+
+  .edit-input-summary:focus {
+    outline: none;
+    border-color: #6b1819;
+    box-shadow: 0 0 5px rgba(133, 30, 31, 0.3);
+  }
+
+.currency-symbol {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #851e1f;
+}
+
+.summary-box.negative {
+  background: #fff5f5;
+  border-color: #dc3545;
+}
+
+  .summary-box.negative .summary-amount {
+    color: #dc3545;
+  }
+ 
+
+/* Phone Container with WhatsApp Button */
+.phone-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+ 
+  justify-content: space-between;
+}
+
+.whatsapp-btn {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+  .whatsapp-btn::before {
+    content: '';
+    font-size: 0.85rem;
+  }
+
+  .whatsapp-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .whatsapp-btn:hover {
+    background: linear-gradient(135deg, #20ba5a 0%, #0e6b5f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  }
+
+  .whatsapp-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);
+  }
+
+ 
+
+  .whatsapp-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+    .whatsapp-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+}
+
+/* Edit Summary Styles */
+.summary-box.editing {
+  border: 2px solid #851e1f;
+  background: #fff9f9;
+}
+
+.summary-amount-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.edit-input-summary {
+  width: 150px;
+  padding: 10px;
+  border: 2px solid #851e1f;
+  border-radius: 5px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  color: #851e1f;
+}
+
+  .edit-input-summary:focus {
+    outline: none;
+    border-color: #6b1819;
+    box-shadow: 0 0 5px rgba(133, 30, 31, 0.3);
+  }
+
+.currency-symbol {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #851e1f;
+}
+
+.summary-box.negative {
+  background: #fff5f5;
+  border-color: #dc3545;
+}
+
+  .summary-box.negative .summary-amount {
+    color: #dc3545;
+  }
