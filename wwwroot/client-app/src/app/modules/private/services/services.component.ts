@@ -80,9 +80,9 @@ export class ServicesComponent {
   }
 
   // Get total revenue if all services sold once
-  get totalRevenue(): number {
-    return this.services.reduce((sum, s) => sum + s.price, 0);
-  }
+  //get totalRevenue(): number {
+  //  return this.services.reduce((sum, s) => sum + s.price, 0);
+  //}
 
   // Toggle add form
   toggleAddForm(): void {

@@ -16,7 +16,7 @@ export class LoginComponent {
     password: ''
   };
 
-  rememberMe = false;
+  //rememberMe = false;
   showPassword = false;
   submitted = false;
   loading = false;
@@ -44,12 +44,7 @@ export class LoginComponent {
       // Example login logic - replace with your actual authentication service
       if (this.credentials.username === 'admin' && this.credentials.password === 'admin123') {
         // Successful login
-        if (this.rememberMe) {
-          localStorage.setItem('rememberMe', 'true');
-
-        }
         localStorage.setItem('access_token', 'sdfdsfsdfds.sdfsdfsdfsd.sdfsdfsd');
-
         // Navigate to clients list or dashboard
         this.router.navigate(['/dashboard']);
       } else {

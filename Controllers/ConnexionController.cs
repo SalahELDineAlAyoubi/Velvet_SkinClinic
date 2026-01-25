@@ -4,16 +4,16 @@ namespace VelvetSkinClinic.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class ConnexionController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<ConnexionController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public ConnexionController(ILogger<ConnexionController> logger)
         {
             _logger = logger;
         }
