@@ -1,0 +1,89 @@
+ <div class="container" dir="rtl">
+  <div class="login-wrapper">
+    <div class="card login-card">
+      <div class="page-header">
+        <h1>تسجيل الدخول</h1>
+        <p class="subtitle">مرحباً بك، الرجاء إدخال بيانات الدخول</p>
+      </div>
+
+      <form class="login-form" (ngSubmit)="onSubmit()">
+        <!-- Username/Email Field -->
+        <div class="form-group">
+          <label for="username" class="form-label">
+            <span class="label-icon">👤</span>
+            اسم المستخدم أو البريد الإلكتروني
+          </label>
+          <input type="text"
+                 id="username"
+                 class="form-input"
+                 [(ngModel)]="credentials.username"
+                 name="username"
+                 placeholder="أدخل اسم المستخدم"
+                 required
+                 [class.error]="submitted && !credentials.username" />
+          <span class="error-message" *ngIf="submitted && !credentials.username">
+            هذا الحقل مطلوب
+          </span>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <span class="label-icon">🔒</span>
+            كلمة المرور
+          </label>
+          <div class="password-wrapper">
+            <input [type]="showPassword ? 'text' : 'password'"
+                   id="password"
+                   class="form-input"
+                   [(ngModel)]="credentials.password"
+                   name="password"
+                   placeholder="أدخل كلمة المرور"
+                   required
+                   [class.error]="submitted && !credentials.password" />
+            <button type="button"
+                    class="toggle-password"
+                    (click)="togglePassword()"
+                    tabindex="-1">
+              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          <span class="error-message" *ngIf="submitted && !credentials.password">
+            هذا الحقل مطلوب
+          </span>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input type="checkbox"
+                   [(ngModel)]="rememberMe"
+                   name="rememberMe" />
+            <span>تذكرني</span>
+          </label>
+          <a href="#" class="forgot-link">نسيت كلمة المرور؟</a>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-error" *ngIf="errorMessage">
+          <span class="alert-icon">⚠️</span>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+                class="btn-submit"
+                [disabled]="loading"
+                [class.loading]="loading">
+          <span *ngIf="!loading">تسجيل الدخول</span>
+          <span *ngIf="loading" class="loader">جاري التحميل...</span>
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <p>ليس لديك حساب؟ <a href="#" class="register-link">سجل الآن</a></p>
+      </div>
+    </div>
+  </div>
+</div>

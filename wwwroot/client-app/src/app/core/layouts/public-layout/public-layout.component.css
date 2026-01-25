@@ -1,0 +1,11 @@
+/* private-layout.component.css (or whatever your layout component is called) */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Important: allows it to fill parent */
+  min-height: 100%;
+}
+
+.content {
+  flex: 1;
+}
