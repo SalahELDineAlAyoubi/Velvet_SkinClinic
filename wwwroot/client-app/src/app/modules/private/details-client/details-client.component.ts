@@ -68,6 +68,7 @@ export class DetailsClientComponent {
   editingPaymentId: number | null = null;
   phoneError: string = '';
   tempPhone: string = ''; // Temporary storage for phone during editing
+  showDeleteModal: boolean = false; // Show delete confirmation modal
 
   constructor(private router: Router) { }
 
@@ -75,31 +76,27 @@ export class DetailsClientComponent {
     return this.client.totalRequired - this.client.totalPaid;
   }
 
-  // Delete client with confirmation
+  // Show delete confirmation modal
   deleteClient(): void {
-    const confirmDelete = confirm(
-      `هل أنت متأكد من حذف العميل "${this.client.name}"؟\n\nسيتم حذف جميع البيانات والمدفوعات المرتبطة بهذا العميل بشكل نهائي.`
-    );
+    this.showDeleteModal = true;
+  }
 
-    if (confirmDelete) {
-      // Double confirmation for safety
-      const doubleConfirm = confirm(
-        'تأكيد نهائي: هذا الإجراء لا يمكن التراجع عنه. هل تريد المتابعة؟'
-      );
+  // Cancel delete
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+  }
 
-      if (doubleConfirm) {
-        // In a real app, you would call a service to delete from backend
-        // For now, we'll just navigate back to dashboard
+  // Confirm delete and navigate away
+  confirmDelete(): void {
+    this.showDeleteModal = false;
 
-        // TODO: Add actual delete API call here
-        // this.clientService.deleteClient(this.client.id).subscribe(() => {
-        //   this.router.navigate(['/dashboard']);
-        // });
+    // In a real app, you would call a service to delete from backend
+    // this.clientService.deleteClient(this.client.id).subscribe(() => {
+    //   this.router.navigate(['/dashboard']);
+    // });
 
-        // Navigate back to dashboard/clients list
-        this.router.navigate(['/dashboard']);
-      }
-    }
+    // Navigate back to dashboard/clients list
+    this.router.navigate(['/dashboard']);
   }
 
   // Validate Lebanese phone number

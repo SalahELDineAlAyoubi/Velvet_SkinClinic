@@ -222,4 +222,36 @@
   <div class="success-msg" *ngIf="showSuccess">
     تم إضافة الدفعة بنجاح ✓
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+    <div class="modal-content delete-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header danger header-mod">
+        <h2>⚠️ تأكيد حذف العميل</h2>
+        <button class="btn-close" (click)="cancelDelete()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="warning-box">
+           <h3>هل أنت متأكد من حذف العميل "{{ client.name }}"؟</h3>
+          <p class="warning-text">سيتم حذف جميع البيانات التالية بشكل نهائي:</p>
+          <ul class="warning-list">
+            <li>المعلومات الشخصية</li>
+            <li>الخدمات المرتبطة ({{ client.services.length }} خدمة)</li>
+            <li>سجل المدفوعات ({{ client.payments.length }} دفعة)</li>
+          </ul>
+          <p class="danger-text">⚠️ هذا الإجراء لا يمكن التراجع عنه!</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="cancelDelete()">
+          إلغاء
+        </button>
+        <button type="button" class="btn-delete-confirm" (click)="confirmDelete()">
+          حذف نهائياً
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
