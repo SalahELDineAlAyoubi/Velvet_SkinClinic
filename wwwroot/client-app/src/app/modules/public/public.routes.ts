@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { redirectGuard } from '../../core/guards/redirect.guard';
 
 export const PUBLIC_ROUTES: Routes = [
 
@@ -11,11 +12,10 @@ export const PUBLIC_ROUTES: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () =>
-          import('./login/login.component')
-            .then(c => c.LoginComponent)
-      }
+        loadComponent: () => import('./login/login.component') .then(c => c.LoginComponent),
+            canActivate: [redirectGuard],
+      }  
     ]
-  }
+  } 
 ];
 

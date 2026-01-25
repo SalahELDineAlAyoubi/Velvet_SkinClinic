@@ -46,7 +46,9 @@ export class LoginComponent {
         // Successful login
         if (this.rememberMe) {
           localStorage.setItem('rememberMe', 'true');
+
         }
+        localStorage.setItem('access_token', 'sdfdsfsdfds.sdfsdfsdfsd.sdfsdfsd');
 
         // Navigate to clients list or dashboard
         this.router.navigate(['/dashboard']);

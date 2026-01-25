@@ -6,15 +6,10 @@ export const authGuard: CanActivateChildFn = () => {
 
   const authService = inject(AuthService);
   const router = inject(Router);
-
-  // ✅ check if user is logged in
-  if (authService.isAuthenticated()) {
-    
-    //router.navigate(['/dashboard']);
-    return true;
+  const isAuthenticated = authService.isAuthenticated();
+  if (!isAuthenticated) {
+    return router.createUrlTree(['/login']);
   }
-
   // ❌ not logged → redirect to login
-  //router.navigate(['/login']);
-  return false;
+   return true;
 };
