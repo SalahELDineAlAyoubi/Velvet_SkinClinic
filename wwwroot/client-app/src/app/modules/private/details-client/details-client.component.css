@@ -17,7 +17,7 @@
 
 
 .page-header {
-  background: linear-gradient(135deg, #851e1f 0%, #a52325 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, #a52325 100%);
   color: white;
   padding: 30px;
   border-radius: 10px;
@@ -75,12 +75,12 @@
 }
 
 .card-title {
-  color: #851e1f;
+  color: var(--primary-color);
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #851e1f;
+  border-bottom: 2px solid var(--primary-color);
 }
 
 /* Client Info */
@@ -130,7 +130,7 @@
   padding: 20px;
   border-radius: 5px;
   text-align: center;
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
 }
 
 .summary-label {
@@ -140,7 +140,7 @@
 }
 
 .summary-amount {
-  color: #851e1f;
+  color: var(--primary-color);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -156,7 +156,7 @@ table {
 }
 
 thead {
-  background: #851e1f;
+  background: var(--primary-color);
   color: white;
 }
 
@@ -210,7 +210,7 @@ td {
 
     .form-group input:focus {
       outline: none;
-      border-color: #851e1f;
+      border-color: var(--primary-color);
     }
 
 button {
@@ -251,7 +251,7 @@ button {
 .edit-input {
   width: 60%;
   padding: 8px;
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
   border-radius: 3px;
   font-size: 1rem;
   font-family: 'Cairo', sans-serif;
@@ -292,7 +292,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #851e1f;
+  background: var(--primary-color);
   color: white;
   padding: 8px 35px 8px 16px; /* Added padding-left for the X button */
   border-radius: 20px;
@@ -304,7 +304,7 @@ button {
 .edit-input-table {
   width: 100%;
   padding: 6px;
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
   border-radius: 3px;
   font-family: 'Cairo', sans-serif;
 }
@@ -355,7 +355,7 @@ thead th:last-child {
 
 .service-select:focus {
   outline: none;
-  border-color: #851e1f;
+  border-color: var(--primary-color);
 }
 
 /* Remove Service Button */
@@ -422,7 +422,7 @@ thead th:last-child {
 
 /* Edit Summary Styles */
 .summary-box.editing {
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
   background: #fff9f9;
 }
 
@@ -436,13 +436,13 @@ thead th:last-child {
 .edit-input-summary {
   width: 150px;
   padding: 10px;
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
   border-radius: 5px;
   font-size: 1.3rem;
   font-weight: 700;
   font-family: 'Cairo', sans-serif;
   text-align: center;
-  color: #851e1f;
+  color: var(--primary-color);
 }
 
   .edit-input-summary:focus {
@@ -454,7 +454,7 @@ thead th:last-child {
 .currency-symbol {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #851e1f;
+  color: var(--primary-color);
 }
 
 .summary-box.negative {
@@ -529,7 +529,7 @@ thead th:last-child {
 
 /* Edit Summary Styles */
 .summary-box.editing {
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
   background: #fff9f9;
 }
 
@@ -543,13 +543,13 @@ thead th:last-child {
 .edit-input-summary {
   width: 150px;
   padding: 10px;
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
   border-radius: 5px;
   font-size: 1.3rem;
   font-weight: 700;
   font-family: 'Cairo', sans-serif;
   text-align: center;
-  color: #851e1f;
+  color: var(--primary-color);
 }
 
   .edit-input-summary:focus {
@@ -561,7 +561,7 @@ thead th:last-child {
 .currency-symbol {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #851e1f;
+  color: var(--primary-color);
 }
 
 .summary-box.negative {

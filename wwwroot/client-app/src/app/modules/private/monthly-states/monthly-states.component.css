@@ -5,7 +5,11 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
 .container {
   font-family: 'Cairo', sans-serif;
   max-width: 1200px;
@@ -16,7 +20,7 @@
 }
 
 .page-header {
-  background: #851e1f;
+  background: var(--primary-color);
   color: white;
   padding: 20px;
   border-radius: 5px;
@@ -37,12 +41,12 @@
 }
 
 .card-title {
-  color: #851e1f;
+  color: var(--primary-color);
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #851e1f;
+  border-bottom: 2px solid var(--primary-color);
 }
 
 /* Filter Tabs */
@@ -67,9 +71,9 @@
   }
 
     .filter-tabs button.active {
-      background: #851e1f;
+      background: var(--primary-color);
       color: white;
-      border-color: #851e1f;
+      border-color: var(--primary-color);
     }
 
     .filter-tabs button:hover:not(.active) {
@@ -109,7 +113,7 @@
 
   .date-input:focus {
     outline: none;
-    border-color: #851e1f;
+    border-color: var(--primary-color);
   }
 
 /* Filter Actions */
@@ -143,6 +147,11 @@
   background: var(--primary-color);
   color: white;
 }
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+}
 
   .btn-print:hover {
     background: var(--primary-hover);
@@ -160,7 +169,7 @@
   padding: 20px;
   border-radius: 5px;
   text-align: center;
-  border: 2px solid #851e1f;
+  border: 2px solid var(--primary-color);
 }
 
 .summary-label {
@@ -170,7 +179,7 @@
 }
 
 .summary-amount {
-  color: #851e1f;
+  color: var(--primary-color);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -186,7 +195,7 @@
 }
 
   .payments-table thead {
-    background: #851e1f;
+    background: var(--primary-color);
     color: white;
   }
 
@@ -218,8 +227,8 @@
 
 .total-row td {
   padding: 15px 12px;
-  border-top: 2px solid #851e1f;
-  color: #851e1f;
+  border-top: 2px solid var(--primary-color);
+  color: var(--primary-color);
 }
 
 .empty {
@@ -245,13 +254,13 @@
   }
 
   .page-header {
-    background: #851e1f;
+    background: var(--primary-color);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
   .payments-table thead {
-    background: #851e1f;
+    background: var(--primary-color);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
