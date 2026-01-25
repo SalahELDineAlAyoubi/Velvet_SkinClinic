@@ -131,7 +131,7 @@
   }
 
 .btn-secondary {
-  background: #6c757d;
+  background: var(--third-color);
   color: white;
 }
 
@@ -140,12 +140,12 @@
   }
 
 .btn-print {
-  background: #28a745;
+  background: var(--primary-color);
   color: white;
 }
 
   .btn-print:hover {
-    background: #218838;
+    background: var(--primary-hover);
   }
 
 /* Summary Statistics */

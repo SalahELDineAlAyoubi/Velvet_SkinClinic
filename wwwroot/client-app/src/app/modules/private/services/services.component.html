@@ -1,99 +1,94 @@
 <div class="container" dir="rtl">
+  <!-- Page Header with Add Button -->
   <div class="page-header">
-    <h1>إدارة الخدمات</h1>
-    <p class="subtitle">إضافة وتعديل وحذف الخدمات المتاحة</p>
-  </div>
-
-  <!-- Stats Cards -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon">📋</div>
-      <div class="stat-info">
-        <div class="stat-label">إجمالي الخدمات</div>
-        <div class="stat-value">{{ totalServices }}</div>
+    <div class="header-content">
+      <div>
+        <h1>إدارة الخدمات</h1>
+        <p class="subtitle">إضافة وتعديل وحذف الخدمات المتاحة</p>
       </div>
+      <button class="btn-add-service" (click)="toggleAddForm()">
+        <span class="plus-icon">+</span>
+        إضافة خدمة جديدة
+      </button>
     </div>
-    <!--<div class="stat-card">
-      <div class="stat-icon">💰</div>
-      <div class="stat-info">
-        <div class="stat-label">إجمالي الأسعار</div>
-        <div class="stat-value">{{ formatAmount(totalRevenue) }} $</div>
-      </div>
-    </div>-->
   </div>
 
-  <!-- Filter and Add Section -->
+  <!-- Search and Stats Card -->
   <div class="card">
-    <div class="controls-section">
-      <div class="filters">
+    <div class="search-section">
+      <div class="search-wrapper">
         <input type="text"
                class="search-input"
                placeholder="🔍 ابحث عن خدمة..."
                [(ngModel)]="searchTerm">
+      </div>
+      <div class="stats">
+        <span class="stat-badge">
+          <strong>{{ filteredServices.length }}</strong> خدمة
+        </span>
+      </div>
+    </div>
+  </div>
 
-        <button type="button"
-                class="btn-reset"
-                (click)="resetFilters()"
-                *ngIf="searchTerm">
-          إعادة تعيين
-        </button>
+  <!-- Add Service Modal -->
+  <div class="modal-overlay" *ngIf="showAddForm" (click)="toggleAddForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>إضافة خدمة جديدة</h2>
+        <button class="btn-close" (click)="toggleAddForm()">×</button>
       </div>
 
-      <button type="button"
-              class="btn-add"
-              (click)="toggleAddForm()">
-        {{ showAddForm ? '✕ إلغاء' : '+ إضافة خدمة جديدة' }}
-      </button>
-    </div>
-
-    <!-- Add Service Form -->
-    <div class="add-form" *ngIf="showAddForm">
-      <h3 class="form-title">إضافة خدمة جديدة</h3>
-      <form (ngSubmit)="addService()">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>اسم الخدمة <span class="required">*</span></label>
-            <input type="text"
-                   [(ngModel)]="newService.name"
-                   name="name"
-                   placeholder="مثال: Hifu"
-                   required>
-          </div>
-
-          <div class="form-group">
-            <label>السعر ($) <span class="required">*</span></label>
-            <input type="number"
-                   [(ngModel)]="newService.price"
-                   name="price"
-                   placeholder="0"
-                   step="0.01"
-                   min="0"
-                   required>
-          </div>
-
-          <div class="form-group">
-            <label>المدة</label>
-            <input type="text"
-                   [(ngModel)]="newService.duration"
-                   name="duration"
-                   placeholder="مثال: 30 دقيقة">
-          </div>
-
-          <div class="form-group full-width">
-            <label>الوصف</label>
-            <textarea [(ngModel)]="newService.description"
-                      name="description"
-                      rows="3"
-                      placeholder="وصف مختصر للخدمة..."></textarea>
-          </div>
+      <form (ngSubmit)="addService()" #serviceForm="ngForm">
+        <div class="form-group">
+          <label for="serviceName">اسم الخدمة <span class="required">*</span></label>
+          <input type="text"
+                 id="serviceName"
+                 [(ngModel)]="newService.name"
+                 name="name"
+                 class="form-input"
+                 placeholder="مثال: Hifu"
+                 required>
         </div>
 
-        <div class="form-actions">
+        <div class="form-group">
+          <label for="servicePrice">السعر ($) <span class="required">*</span></label>
+          <input type="number"
+                 id="servicePrice"
+                 [(ngModel)]="newService.price"
+                 name="price"
+                 class="form-input"
+                 placeholder="0"
+                 step="0.01"
+                 min="0"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="serviceDuration">المدة</label>
+          <input type="text"
+                 id="serviceDuration"
+                 [(ngModel)]="newService.duration"
+                 name="duration"
+                 class="form-input"
+                 placeholder="مثال: 30 دقيقة">
+        </div>
+
+        <div class="form-group">
+          <label for="serviceDescription">الوصف</label>
+          <textarea id="serviceDescription"
+                    [(ngModel)]="newService.description"
+                    name="description"
+                    class="form-input"
+                    rows="3"
+                    placeholder="وصف مختصر للخدمة..."></textarea>
+        </div>
+
+        <div class="modal-footer">
           <button type="button" class="btn-cancel" (click)="toggleAddForm()">
             إلغاء
           </button>
           <button type="submit" class="btn-submit">
-            حفظ الخدمة
+            إضافة الخدمة
           </button>
         </div>
       </form>

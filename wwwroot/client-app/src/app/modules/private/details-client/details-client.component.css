@@ -176,7 +176,7 @@ td {
     }
 
 button {
-  background: #851e1f;
+  background: var(--primary-color);
   color: white;
   padding: 12px 30px;
   border: none;
@@ -277,7 +277,7 @@ button {
   justify-content: center;
 }
 
-.btn-edit,
+.btn-edit-cl,
 .btn-save,
 .btn-delete {
   width: auto;
@@ -285,28 +285,30 @@ button {
   font-size: 0.85rem;
 }
 
-.btn-edit {
-  background: #007bff;
+.btn-edit-cl {
+  background:  var(--third-color);
+  
 }
 
-  .btn-edit:hover {
-    background: #0056b3;
+  .btn-edit-cl:hover {
+    background: var(--third-color-hover) !important;
   }
 
 .btn-save {
-  background: #28a745;
+  background: var(--third-color);
 }
 
   .btn-save:hover {
-    background: #218838;
+    background: var(--third-color-hover) !important;
   }
 
 .btn-delete {
-  background: #dc3545;
+  background: var(--delete-color);
+  
 }
 
   .btn-delete:hover {
-    background: #c82333;
+    background: var(--delete-hover) !important;
   }
 /* Table Header - Adding Actions Column */
 thead th:last-child {
@@ -324,7 +326,7 @@ thead th:last-child {
   position: relative;
   display: inline-flex;
   align-items: center;
-  background: #851e1f;
+  background: var(--primary-color);
   color: white;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -425,14 +427,13 @@ thead th:last-child {
   .summary-box.negative .summary-amount {
     color: #dc3545;
   }
-
-
+ 
 /* Phone Container with WhatsApp Button */
 .phone-container {
   display: flex;
   align-items: center;
   gap: 12px;
-   justify-content: space-between;
+  justify-content: space-between;
 }
 
 .whatsapp-btn {

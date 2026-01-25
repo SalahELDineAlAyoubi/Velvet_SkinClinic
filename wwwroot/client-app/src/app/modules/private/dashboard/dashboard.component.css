@@ -6,16 +6,7 @@
   box-sizing: border-box;
 }
 
-:root {
-  --primary-color: #851e1f;
-  --primary-hover: #6b1819;
-  --secondary-color: #f9f9f9;
-  --border-color: #e0e0e0;
-  --text-primary: #333;
-  --text-secondary: #666;
-  --success-color: #28a745;
-  --error-color: #dc3545;
-}
+ 
 
 .container {
   font-family: 'Cairo', sans-serif;

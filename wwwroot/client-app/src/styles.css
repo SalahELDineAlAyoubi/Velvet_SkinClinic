@@ -1,6 +1,17 @@
 
 :root {
   --primary-color: #851e1f;
+  --primary-hover: gray;
+  --success-color: #218838;
+  --danger-color: #dc3545;
+  --secondary-color: #f9f9f9;
+  --border-color: #e0e0e0;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --third-color: #28323d;
+  --third-color-hover: #575c61;
+  --delete-color: #b51d2c;
+  --delete-hover: #cc3f4d;
 }  
 .pnt {
   cursor: pointer;
