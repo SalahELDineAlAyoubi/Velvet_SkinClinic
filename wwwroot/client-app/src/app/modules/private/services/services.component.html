@@ -17,14 +17,7 @@
       <div class="stat-icon">💰</div>
       <div class="stat-info">
         <div class="stat-label">إجمالي الأسعار</div>
-        <div class="stat-value">{{ totalRevenue | number:'1.2-2' }} $</div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">📊</div>
-      <div class="stat-info">
-        <div class="stat-label">الفئات</div>
-        <div class="stat-value">{{ categories.length }}</div>
+        <div class="stat-value">{{ formatAmount(totalRevenue) }} $</div>
       </div>
     </div>
   </div>
@@ -38,18 +31,10 @@
                placeholder="🔍 ابحث عن خدمة..."
                [(ngModel)]="searchTerm">
 
-        <select class="category-select"
-                [(ngModel)]="selectedCategory">
-          <option value="">جميع الفئات</option>
-          <option *ngFor="let cat of categories" [value]="cat">
-            {{ cat }} ({{ getCategoryCount(cat) }})
-          </option>
-        </select>
-
         <button type="button"
                 class="btn-reset"
                 (click)="resetFilters()"
-                *ngIf="searchTerm || selectedCategory">
+                *ngIf="searchTerm">
           إعادة تعيين
         </button>
       </div>
@@ -76,19 +61,11 @@
           </div>
 
           <div class="form-group">
-            <label>الفئة <span class="required">*</span></label>
-            <select [(ngModel)]="newService.category" name="category" required>
-              <option value="">اختر الفئة</option>
-              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
             <label>السعر ($) <span class="required">*</span></label>
             <input type="number"
                    [(ngModel)]="newService.price"
                    name="price"
-                   placeholder="0.00"
+                   placeholder="0"
                    step="0.01"
                    min="0"
                    required>
@@ -137,13 +114,6 @@
             </div>
 
             <div class="form-group">
-              <label>الفئة</label>
-              <select [(ngModel)]="editingService!.category" name="editCategory" required>
-                <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-              </select>
-            </div>
-
-            <div class="form-group">
               <label>السعر ($)</label>
               <input type="number" [(ngModel)]="editingService!.price" name="editPrice" step="0.01" required>
             </div>
@@ -175,9 +145,8 @@
         <div class="service-header">
           <div>
             <h3 class="service-name">{{ service.name }}</h3>
-            <span class="service-category">{{ service.category }}</span>
           </div>
-          <div class="service-price">{{ service.price | number:'1.2-2' }} $</div>
+          <div class="service-price">{{ formatAmount(service.price) }} $</div>
         </div>
 
         <p class="service-description" *ngIf="service.description">
@@ -205,8 +174,8 @@
     <div class="empty-state" *ngIf="filteredServices.length === 0">
       <span class="empty-icon">📭</span>
       <p>لا توجد خدمات</p>
-      <small *ngIf="searchTerm || selectedCategory">حاول تغيير معايير البحث</small>
-      <small *ngIf="!searchTerm && !selectedCategory">ابدأ بإضافة خدمة جديدة</small>
+      <small *ngIf="searchTerm">حاول تغيير معايير البحث</small>
+      <small *ngIf="!searchTerm">ابدأ بإضافة خدمة جديدة</small>
     </div>
   </div>
 

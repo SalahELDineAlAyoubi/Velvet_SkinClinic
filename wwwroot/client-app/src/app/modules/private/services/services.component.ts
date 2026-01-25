@@ -8,7 +8,6 @@ interface Service {
   description: string;
   price: number;
   duration: string; // e.g., "30 دقيقة"
-  category: string;
 }
 
 @Component({
@@ -20,25 +19,16 @@ interface Service {
 })
 export class ServicesComponent {
   services: Service[] = [
-    { id: 1, name: 'Hifu', description: 'شد الوجه بالموجات فوق الصوتية', price: 200, duration: '60 دقيقة', category: 'العناية بالبشرة' },
-    { id: 2, name: 'BBL', description: 'تكبير الأرداف البرازيلي', price: 350, duration: '90 دقيقة', category: 'نحت الجسم' },
-    { id: 3, name: 'Cavitation', description: 'تفتيت الدهون بالموجات الصوتية', price: 150, duration: '45 دقيقة', category: 'نحت الجسم' },
-    { id: 4, name: 'Laser', description: 'إزالة الشعر بالليزر', price: 100, duration: '30 دقيقة', category: 'إزالة الشعر' },
-    { id: 5, name: 'Botox', description: 'حقن البوتوكس للتجاعيد', price: 250, duration: '20 دقيقة', category: 'الحقن التجميلية' },
-    { id: 6, name: 'Filler', description: 'حشوات الوجه والشفاه', price: 280, duration: '30 دقيقة', category: 'الحقن التجميلية' },
-    { id: 7, name: 'Microneedling', description: 'الوخز بالإبر الدقيقة', price: 180, duration: '45 دقيقة', category: 'العناية بالبشرة' },
-    { id: 8, name: 'PRP', description: 'حقن البلازما الغنية بالصفائح', price: 220, duration: '40 دقيقة', category: 'الحقن التجميلية' },
-    { id: 9, name: 'Chemical Peel', description: 'التقشير الكيميائي للبشرة', price: 120, duration: '30 دقيقة', category: 'العناية بالبشرة' },
-    { id: 10, name: 'Mesotherapy', description: 'حقن الميزوثيرابي', price: 160, duration: '35 دقيقة', category: 'الحقن التجميلية' }
-  ];
-
-  categories: string[] = [
-    'العناية بالبشرة',
-    'نحت الجسم',
-    'إزالة الشعر',
-    'الحقن التجميلية',
-    'العناية بالشعر',
-    'أخرى'
+    { id: 1, name: 'Hifu', description: 'شد الوجه بالموجات فوق الصوتية', price: 200, duration: '60 دقيقة' },
+    { id: 2, name: 'BBL', description: 'تكبير الأرداف البرازيلي', price: 350, duration: '90 دقيقة' },
+    { id: 3, name: 'Cavitation', description: 'تفتيت الدهون بالموجات الصوتية', price: 150, duration: '45 دقيقة' },
+    { id: 4, name: 'Laser', description: 'إزالة الشعر بالليزر', price: 100, duration: '30 دقيقة' },
+    { id: 5, name: 'Botox', description: 'حقن البوتوكس للتجاعيد', price: 250, duration: '20 دقيقة' },
+    { id: 6, name: 'Filler', description: 'حشوات الوجه والشفاه', price: 280, duration: '30 دقيقة' },
+    { id: 7, name: 'Microneedling', description: 'الوخز بالإبر الدقيقة', price: 180, duration: '45 دقيقة' },
+    { id: 8, name: 'PRP', description: 'حقن البلازما الغنية بالصفائح', price: 220, duration: '40 دقيقة' },
+    { id: 9, name: 'Chemical Peel', description: 'التقشير الكيميائي للبشرة', price: 120, duration: '30 دقيقة' },
+    { id: 10, name: 'Mesotherapy', description: 'حقن الميزوثيرابي', price: 160, duration: '35 دقيقة' }
   ];
 
   // Form data
@@ -46,7 +36,6 @@ export class ServicesComponent {
   editingService: Service | null = null;
   showAddForm: boolean = false;
   searchTerm: string = '';
-  selectedCategory: string = '';
 
   // Get empty service template
   getEmptyService(): Service {
@@ -55,9 +44,19 @@ export class ServicesComponent {
       name: '',
       description: '',
       price: 0,
-      duration: '',
-      category: ''
+      duration: ''
     };
+  }
+
+  // Format amount - removes .00 but keeps decimals when needed
+  formatAmount(amount: number): string {
+    if (amount % 1 === 0) {
+      // Whole number - no decimals
+      return amount.toString();
+    } else {
+      // Has decimals - show up to 2 decimal places
+      return amount.toFixed(2).replace(/\.?0+$/, '');
+    }
   }
 
   // Filter services
@@ -70,11 +69,6 @@ export class ServicesComponent {
         s.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         s.description.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
-    }
-
-    // Filter by category
-    if (this.selectedCategory) {
-      filtered = filtered.filter(s => s.category === this.selectedCategory);
     }
 
     return filtered;
@@ -154,10 +148,6 @@ export class ServicesComponent {
       alert('الرجاء إدخال اسم الخدمة');
       return false;
     }
-    if (!service.category) {
-      alert('الرجاء اختيار فئة الخدمة');
-      return false;
-    }
     if (service.price <= 0) {
       alert('الرجاء إدخال سعر صحيح');
       return false;
@@ -180,11 +170,5 @@ export class ServicesComponent {
   // Reset filters
   resetFilters(): void {
     this.searchTerm = '';
-    this.selectedCategory = '';
-  }
-
-  // Get services by category count
-  getCategoryCount(category: string): number {
-    return this.services.filter(s => s.category === category).length;
   }
 }
