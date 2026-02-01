@@ -10,11 +10,10 @@
 }
 
   .navbar .nav-link:hover {
-    color: #ffd700 !important;  
+    color: #ffd700 !important;
   }
 
 .navbar-text {
-
   color: #fff;
 }
 
@@ -22,4 +21,224 @@
   background-color: var(--primary-color);
 }
 
+/* Notification Styles */
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
 
+.notification-btn {
+  position: relative;
+  font-family: 'Cairo', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+  min-width: 30px;
+  min-height: 44px;
+}
+
+  .notification-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    transform: scale(1.05);
+    border-color: white !important;
+  }
+
+  .notification-btn svg {
+    display: block;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+  }
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+  }
+}
+
+/* Notifications Dropdown */
+.notifications-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 320px;
+  max-width: 400px;
+  z-index: 9999 !important;
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+  display: block !important;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notifications-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #a52325 100%);
+  color: white;
+  padding: 15px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+  .notifications-header h6 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+  }
+
+.notifications-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.no-notifications {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Cairo', sans-serif;
+}
+
+  .notification-item:hover {
+    background: #f8f9fa;
+    transform: translateX(-5px);
+  }
+
+  .notification-item:last-child {
+    border-bottom: none;
+  }
+
+.notification-icon {
+  font-size: 2rem;
+  margin-left: 15px;
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+  text-align: right;
+}
+
+.notification-name {
+  font-weight: 700;
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.notification-date {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* Scrollbar Styling */
+.notifications-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notifications-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.notifications-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+  .notifications-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notifications-dropdown {
+    min-width: 280px;
+    max-width: 90vw;
+    right: -10px;
+  }
+
+  .notification-item {
+    padding: 12px 15px;
+  }
+
+  .notification-icon {
+    font-size: 1.5rem;
+    margin-left: 10px;
+  }
+
+  .notification-name {
+    font-size: 0.9rem;
+  }
+
+  .notification-date {
+    font-size: 0.8rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .notifications-dropdown {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .notification-badge {
+  right: auto;
+  left: -8px;
+}
+
+[dir="rtl"] .notification-icon {
+  margin-left: 0;
+  margin-right: 15px;
+}
+
+[dir="rtl"] .notification-item:hover {
+  transform: translateX(5px);
+}
