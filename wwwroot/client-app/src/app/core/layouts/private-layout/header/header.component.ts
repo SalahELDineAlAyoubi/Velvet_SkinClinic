@@ -99,7 +99,7 @@ export class HeaderComponent implements OnInit {
 
   goToClient(client: Client): void {
     // Navigate to client details page
-    this.router.navigate(['/client-details', client.id]);
+    this.router.navigate(['/clients', client.id]);
     this.showNotifications = false;
   }
 

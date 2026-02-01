@@ -25,6 +25,7 @@
 .notification-container {
   position: relative;
   display: inline-block;
+  margin-left:1rem;
 }
 
 .notification-btn {
@@ -36,7 +37,7 @@
   padding: 8px 12px;
   transition: all 0.3s ease;
   min-width: 30px;
-  min-height: 44px;
+  min-height: 33px;
 }
 
   .notification-btn:hover {
