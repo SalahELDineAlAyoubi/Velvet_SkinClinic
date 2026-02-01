@@ -7,7 +7,7 @@ interface Service {
   name: string;
   description: string;
   price: number;
-  duration: string; // e.g., "30 دقيقة"
+  sessionsNumber: number; // e.g., "30 دقيقة"
 }
 
 @Component({
@@ -19,16 +19,16 @@ interface Service {
 })
 export class ServicesComponent {
   services: Service[] = [
-    { id: 1, name: 'Hifu', description: 'شد الوجه بالموجات فوق الصوتية', price: 200, duration: '60 دقيقة' },
-    { id: 2, name: 'BBL', description: 'تكبير الأرداف البرازيلي', price: 350, duration: '90 دقيقة' },
-    { id: 3, name: 'Cavitation', description: 'تفتيت الدهون بالموجات الصوتية', price: 150, duration: '45 دقيقة' },
-    { id: 4, name: 'Laser', description: 'إزالة الشعر بالليزر', price: 100, duration: '30 دقيقة' },
-    { id: 5, name: 'Botox', description: 'حقن البوتوكس للتجاعيد', price: 250, duration: '20 دقيقة' },
-    { id: 6, name: 'Filler', description: 'حشوات الوجه والشفاه', price: 280, duration: '30 دقيقة' },
-    { id: 7, name: 'Microneedling', description: 'الوخز بالإبر الدقيقة', price: 180, duration: '45 دقيقة' },
-    { id: 8, name: 'PRP', description: 'حقن البلازما الغنية بالصفائح', price: 220, duration: '40 دقيقة' },
-    { id: 9, name: 'Chemical Peel', description: 'التقشير الكيميائي للبشرة', price: 120, duration: '30 دقيقة' },
-    { id: 10, name: 'Mesotherapy', description: 'حقن الميزوثيرابي', price: 160, duration: '35 دقيقة' }
+    { id: 1, name: 'Hifu', description: 'شد الوجه بالموجات فوق الصوتية', price: 200, sessionsNumber: 5 },
+    { id: 2, name: 'BBL', description: 'تكبير الأرداف البرازيلي', price: 350, sessionsNumber: 5 },
+    { id: 3, name: 'Cavitation', description: 'تفتيت الدهون بالموجات الصوتية', price: 150, sessionsNumber: 6 },
+    { id: 4, name: 'Laser', description: 'إزالة الشعر بالليزر', price: 100, sessionsNumber: 6},
+    { id: 5, name: 'Botox', description: 'حقن البوتوكس للتجاعيد', price: 250, sessionsNumber: 15 },
+    { id: 6, name: 'Filler', description: 'حشوات الوجه والشفاه', price: 280, sessionsNumber:3 },
+    { id: 7, name: 'Microneedling', description: 'الوخز بالإبر الدقيقة', price: 180, sessionsNumber: 22 },
+    { id: 8, name: 'PRP', description: 'حقن البلازما الغنية بالصفائح', price: 220, sessionsNumber: 3},
+    { id: 9, name: 'Chemical Peel', description: 'التقشير الكيميائي للبشرة', price: 120, sessionsNumber: 4 },
+    { id: 10, name: 'Mesotherapy', description: 'حقن الميزوثيرابي', price: 160, sessionsNumber: 5 }
   ];
 
   // Form data
@@ -44,7 +44,7 @@ export class ServicesComponent {
       name: '',
       description: '',
       price: 0,
-      duration: ''
+      sessionsNumber: 0
     };
   }
 
@@ -76,7 +76,7 @@ export class ServicesComponent {
 
   // Get total services count
   get totalServices(): number {
-    return this.services.length;
+    return this.services.length; 
   }
 
   // Get total revenue if all services sold once

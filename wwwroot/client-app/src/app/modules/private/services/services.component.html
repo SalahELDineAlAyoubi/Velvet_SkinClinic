@@ -64,13 +64,13 @@
         </div>
 
         <div class="form-group">
-          <label for="serviceDuration">المدة</label>
-          <input type="text"
+          <label for="serviceDuration">عدد الجلسات</label>
+          <input type="number"
                  id="serviceDuration"
-                 [(ngModel)]="newService.duration"
-                 name="duration"
+                 [(ngModel)]="newService.sessionsNumber"
+                 name="sessionsNumber"
                  class="form-input"
-                 placeholder="مثال: 30 دقيقة">
+                 placeholder="مثال: 30 دقيقة" min="0">
         </div>
 
         <div class="form-group">
@@ -142,13 +142,13 @@
             <div class="form-group-modal">
               <label class="input-label">
                 <span class="label-icon">⏱️</span>
-                <span>المدة</span>
+                <span> عدد الجلسات</span>
               </label>
-              <input type="text"
-                     [(ngModel)]="editingService!.duration"
-                     name="editDuration"
+              <input type="number"
+                     [(ngModel)]="editingService!.sessionsNumber"
+                     name="editSessionsNumber"
                      class="input-field"
-                     placeholder="مثال: 30 دقيقة">
+                     placeholder="مثال: 10 " min="0">
             </div>
           </div>
 
@@ -192,8 +192,8 @@
       </p>
 
       <div class="service-meta">
-        <span class="meta-item" *ngIf="service.duration">
-          ⏱️ {{ service.duration }}
+        <span class="meta-item" *ngIf="service.sessionsNumber">
+          ⏱️ {{ service.sessionsNumber }}
         </span>
       </div>
 
