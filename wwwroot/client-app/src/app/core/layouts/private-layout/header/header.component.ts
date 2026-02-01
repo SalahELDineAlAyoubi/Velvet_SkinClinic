@@ -63,7 +63,7 @@ export class HeaderComponent implements OnInit {
 
     // For now, using mock data - REPLACE WITH YOUR API CALL
     const allClients: Client[] = [
-      { id: '1', name: 'Maysa Ayoubi', birthday: '01/02/2005', phone: '03 181 111' },
+      { id: '1', name: 'Maysa Ayoubi', birthday: '02/02/2005', phone: '03 181 111' },
       { id: '2', name: 'Sara Ahmad', birthday: '15/03/1995', phone: '03 123 456' },
       { id: '3', name: 'Lara Hassan', birthday: '01/02/1998', phone: '03 789 012' }
       // Add more mock clients or fetch from API

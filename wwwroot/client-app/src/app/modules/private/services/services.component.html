@@ -46,8 +46,11 @@
                  [(ngModel)]="newService.name"
                  name="name"
                  class="form-input"
+                 [class.input-error]="addErrors.name"
                  placeholder="مثال: Hifu"
+                 (blur)="validateAddField('name')"
                  required>
+          <span class="error-message" *ngIf="addErrors.name">{{ addErrors.name }}</span>
         </div>
 
         <div class="form-group">
@@ -57,10 +60,13 @@
                  [(ngModel)]="newService.price"
                  name="price"
                  class="form-input"
+                 [class.input-error]="addErrors.price"
                  placeholder="0"
                  step="0.01"
                  min="0"
+                 (blur)="validateAddField('price')"
                  required>
+          <span class="error-message" *ngIf="addErrors.price">{{ addErrors.price }}</span>
         </div>
 
         <div class="form-group">
@@ -70,7 +76,11 @@
                  [(ngModel)]="newService.sessionsNumber"
                  name="sessionsNumber"
                  class="form-input"
-                 placeholder="مثال: 30 دقيقة" min="0">
+                 [class.input-error]="addErrors.sessionsNumber"
+                 placeholder="مثال: 30 دقيقة"
+                 min="0"
+                 (blur)="validateAddField('sessionsNumber')">
+          <span class="error-message" *ngIf="addErrors.sessionsNumber">{{ addErrors.sessionsNumber }}</span>
         </div>
 
         <div class="form-group">
@@ -115,8 +125,11 @@
                    [(ngModel)]="editingService!.name"
                    name="editName"
                    class="input-field"
+                   [class.input-error]="editErrors.name"
                    placeholder="أدخل اسم الخدمة"
+                   (blur)="validateEditField('name')"
                    required>
+            <span class="error-message" *ngIf="editErrors.name">{{ editErrors.name }}</span>
           </div>
 
           <div class="form-row">
@@ -131,12 +144,15 @@
                        [(ngModel)]="editingService!.price"
                        name="editPrice"
                        class="input-field"
+                       [class.input-error]="editErrors.price"
                        placeholder="0"
                        step="0.01"
                        min="0"
+                       (blur)="validateEditField('price')"
                        required>
                 <span class="input-suffix">$</span>
               </div>
+              <span class="error-message" *ngIf="editErrors.price">{{ editErrors.price }}</span>
             </div>
 
             <div class="form-group-modal">
@@ -148,7 +164,11 @@
                      [(ngModel)]="editingService!.sessionsNumber"
                      name="editSessionsNumber"
                      class="input-field"
-                     placeholder="مثال: 10 " min="0">
+                     [class.input-error]="editErrors.sessionsNumber"
+                     placeholder="مثال: 10 "
+                     min="0"
+                     (blur)="validateEditField('sessionsNumber')">
+              <span class="error-message" *ngIf="editErrors.sessionsNumber">{{ editErrors.sessionsNumber }}</span>
             </div>
           </div>
 
@@ -174,6 +194,34 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+    <div class="modal-content delete-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header danger-header">
+        <h3 class="modal-title">⚠️ تأكيد الحذف</h3>
+        <button type="button" class="close-btn" (click)="cancelDelete()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="delete-confirmation">
+          <div class="warning-icon">🗑️</div>
+          <h4>هل أنت متأكد من حذف هذه الخدمة؟</h4>
+          <p class="service-name-highlight">{{ serviceToDelete?.name }}</p>
+          <p class="warning-text">لن تتمكن من التراجع عن هذا الإجراء!</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" (click)="cancelDelete()">
+          إلغاء
+        </button>
+        <button type="button" class="btn-modal-delete" (click)="confirmDelete()">
+          🗑️ حذف
+        </button>
+      </div>
     </div>
   </div>
 
