@@ -62,6 +62,33 @@
              [(ngModel)]="client.birthday"
              class="edit-input" dir="ltr">
     </div>
+
+    <div class="info-row">
+      <span class="label">الامراض:</span>
+      <span class="value" *ngIf="!isEditingInfo">{{ client.diseases || 'لا يوجد' }}</span>
+      <!--<input *ngIf="isEditingInfo"
+             type="text"
+             [(ngModel)]="client.diseases"
+             class="edit-input"
+             placeholder="أدخل الامراض">-->
+      <textarea *ngIf="isEditingInfo"
+                [(ngModel)]="client.diseases"
+                class="edit-input"
+                rows="2"
+               placeholder="أدخل الامراض"
+                style="resize: vertical; min-height: 80px;"></textarea>
+    </div>
+ 
+    <div class="info-row" style="align-items: flex-start;">
+      <span class="label">ملاحظات:</span>
+      <span class="value" *ngIf="!isEditingInfo" style="white-space: pre-wrap;">{{ client.notes || 'لا يوجد' }}</span>
+      <textarea *ngIf="isEditingInfo"
+                [(ngModel)]="client.notes"
+                class="edit-input"
+                rows="4"
+                placeholder="أدخل ملاحظات"
+                style="resize: vertical; min-height: 80px;"></textarea>
+    </div>
   </div>
 
   <!-- Services -->
@@ -233,7 +260,7 @@
 
       <div class="modal-body">
         <div class="warning-box">
-           <h3>هل أنت متأكد من حذف العميل "{{ client.name }}"؟</h3>
+          <h3>هل أنت متأكد من حذف العميل "{{ client.name }}"؟</h3>
           <p class="warning-text">سيتم حذف جميع البيانات التالية بشكل نهائي:</p>
           <ul class="warning-list">
             <li>المعلومات الشخصية</li>

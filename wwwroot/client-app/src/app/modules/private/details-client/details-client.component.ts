@@ -14,6 +14,8 @@ interface Client {
   id: string;
   phone: string;
   birthday: string;
+  diseases: string;
+  notes: string;
   services: string[];
   totalRequired: number;
   totalPaid: number;
@@ -33,6 +35,8 @@ export class DetailsClientComponent {
     id: '123',
     phone: '03 181 111',
     birthday: '15/08/2005',
+    diseases: '',
+    notes: '',
     services: ['Hifu', 'BBL', 'Caviation'],
     totalRequired: 700,
     totalPaid: 650,
@@ -249,7 +253,7 @@ export class DetailsClientComponent {
   // Edit payment
   editPayment(payment: Payment): void {
     this.editingPaymentId = payment.paymentNumber;
-  } 
+  }
 
   // Save payment edit
   savePayment(payment: Payment): void {

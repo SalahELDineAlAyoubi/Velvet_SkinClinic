@@ -1,4 +1,3 @@
- 
 * {
   margin: 0;
   padding: 0;
@@ -41,7 +40,7 @@
 /* Delete Client Button */
 .btn-delete-client {
   background: white;
-  color:     var(--primary-color);
+  color: var(--primary-color);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
@@ -64,7 +63,7 @@
   }
 
 
-   
+
 .card {
   background: white;
   padding: 25px;
@@ -323,8 +322,7 @@ button {
 }
 
 .btn-edit-cl {
-  background:  var(--third-color);
-  
+  background: var(--third-color);
 }
 
   .btn-edit-cl:hover {
@@ -341,7 +339,6 @@ button {
 
 .btn-delete {
   background: var(--delete-color);
-  
 }
 
   .btn-delete:hover {
@@ -464,7 +461,7 @@ thead th:last-child {
   .summary-box.negative .summary-amount {
     color: #dc3545;
   }
- 
+
 /* Phone Container with WhatsApp Button */
 .phone-container {
   display: flex;
@@ -602,7 +599,7 @@ thead th:last-child {
   background: white;
   border-radius: 12px;
   width: 100%;
-   max-width: 500px;
+  max-width: 500px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.3);
   animation: slideUp 0.3s;
 }
@@ -770,9 +767,11 @@ thead th:last-child {
   transition: all 0.3s;
   font-size: 1rem;
 }
-.header-mod{
-    background:var(--primary-color) !important;
+
+.header-mod {
+  background: var(--primary-color) !important;
 }
+
 .btn-delete-confirm:hover {
   background: var(--delete-hover);
   transform: translateY(-2px);
