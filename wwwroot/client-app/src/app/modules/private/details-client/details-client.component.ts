@@ -70,9 +70,28 @@ export class DetailsClientComponent {
   isEditingInfo: boolean = false;
   isEditingTotalRequired: boolean = false;
   editingPaymentId: number | null = null;
-  phoneError: string = '';
-  tempPhone: string = ''; // Temporary storage for phone during editing
-  showDeleteModal: boolean = false; // Show delete confirmation modal
+  tempPhone: string = '';
+
+  // Modals
+  showDeleteModal: boolean = false;
+  showDeleteServiceModal: boolean = false;
+  showDeletePaymentModal: boolean = false;
+  serviceToDelete: string = '';
+  paymentToDelete: Payment | null = null;
+
+  // Validation errors
+  infoErrors = {
+    name: '',
+    phone: '',
+    birthday: ''
+  };
+
+  totalRequiredError: string = '';
+  paymentAmountError: string = '';
+  editPaymentErrors = {
+    amount: '',
+    date: ''
+  };
 
   constructor(private router: Router) { }
 
@@ -80,68 +99,102 @@ export class DetailsClientComponent {
     return this.client.totalRequired - this.client.totalPaid;
   }
 
-  // Show delete confirmation modal
+  // Show delete client confirmation modal
   deleteClient(): void {
     this.showDeleteModal = true;
   }
 
-  // Cancel delete
+  // Cancel delete client
   cancelDelete(): void {
     this.showDeleteModal = false;
   }
 
-  // Confirm delete and navigate away
+  // Confirm delete client and navigate away
   confirmDelete(): void {
     this.showDeleteModal = false;
-
-    // In a real app, you would call a service to delete from backend
-    // this.clientService.deleteClient(this.client.id).subscribe(() => {
-    //   this.router.navigate(['/dashboard']);
-    // });
-
-    // Navigate back to dashboard/clients list
     this.router.navigate(['/dashboard']);
   }
 
   // Validate Lebanese phone number
   validateLebanesePhone(phone: string): boolean {
-    // Remove all spaces and special characters
     const cleanPhone = phone.replace(/\s+/g, '').replace(/[^0-9]/g, '');
-
-    // Lebanese mobile prefixes: 03, 70, 71, 76, 78, 79, 81
-    // Lebanese landline prefixes: 01, 04, 05, 06, 07, 09
     const mobilePattern = /^(03|70|71|76|78|79|81)\d{6}$/;
     const landlinePattern = /^(01|04|05|06|07|09)\d{6}$/;
-
     return mobilePattern.test(cleanPhone) || landlinePattern.test(cleanPhone);
   }
 
-  // Format date from YYYY-MM-DD to DD/MM/YYYY
-  formatDate(dateString: string): string {
-    if (!dateString) return '';
+  // Validate birthday format
+  validateBirthday(birthday: string): boolean {
+    if (!birthday) return false;
+    // Accept DD/MM/YYYY or DD/MM format
+    const pattern = /^(\d{2})\/(\d{2})(\/\d{4})?$/;
+    if (!pattern.test(birthday)) return false;
 
-    // Check if already in DD/MM/YYYY format
-    if (dateString.includes('/')) {
-      return dateString;
-    }
+    const parts = birthday.split('/');
+    const day = parseInt(parts[0]);
+    const month = parseInt(parts[1]);
 
-    // Convert from YYYY-MM-DD
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
+    if (day < 1 || day > 31) return false;
+    if (month < 1 || month > 12) return false;
+
+    return true;
   }
 
-  // Format date from DD/MM/YYYY to YYYY-MM-DD (for input fields)
-  formatDateForInput(dateString: string): string {
-    if (!dateString) return '';
+  // Validate personal info fields
+  validateInfoField(field: keyof typeof this.infoErrors): void {
+    switch (field) {
+      case 'name':
+        if (!this.client.name.trim()) {
+          this.infoErrors.name = 'الرجاء إدخال الاسم';
+        } else if (this.client.name.trim().length < 2) {
+          this.infoErrors.name = 'الاسم يجب أن يكون حرفين على الأقل';
+        } else {
+          this.infoErrors.name = '';
+        }
+        break;
+      case 'phone':
+        if (!this.client.phone.trim()) {
+          this.infoErrors.phone = 'الرجاء إدخال رقم الهاتف';
+        } else if (!this.validateLebanesePhone(this.client.phone)) {
+          this.infoErrors.phone = 'رقم الهاتف غير صحيح. يجب أن يكون رقم لبناني صحيح';
+        } else {
+          this.infoErrors.phone = '';
+        }
+        break;
+      case 'birthday':
+        if (!this.client.birthday.trim()) {
+          this.infoErrors.birthday = 'الرجاء إدخال تاريخ الميلاد';
+        } else if (!this.validateBirthday(this.client.birthday)) {
+          this.infoErrors.birthday = 'تاريخ غير صحيح. استخدم صيغة DD/MM/YYYY';
+        } else {
+          this.infoErrors.birthday = '';
+        }
+        break;
+    }
+  }
 
-    // Check if already in YYYY-MM-DD format
-    if (dateString.includes('-')) {
-      return dateString;
+  // Validate all personal info
+  validatePersonalInfo(): boolean {
+    let isValid = true;
+
+    this.validateInfoField('name');
+    this.validateInfoField('phone');
+    this.validateInfoField('birthday');
+
+    if (this.infoErrors.name || this.infoErrors.phone || this.infoErrors.birthday) {
+      isValid = false;
     }
 
-    // Convert from DD/MM/YYYY
-    const [day, month, year] = dateString.split('/');
-    return `${year}-${month}-${day}`;
+    return isValid;
+  }
+
+  // Reset personal info errors
+  resetInfoErrors(): void {
+    this.infoErrors = {
+      name: '',
+      phone: '',
+      birthday: ''
+    };
   }
 
   // Get services not already added
@@ -151,13 +204,9 @@ export class DetailsClientComponent {
 
   // Open WhatsApp chat
   openWhatsApp(): void {
-    // Remove spaces and special characters from phone number
     const cleanPhone = this.client.phone.replace(/\s+/g, '').replace(/[^0-9+]/g, '');
-
-    // Add country code if not present (Lebanon +961)
     let phoneNumber = cleanPhone;
     if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('961')) {
-      // If number starts with 0, remove it and add +961
       if (cleanPhone.startsWith('0')) {
         phoneNumber = '961' + cleanPhone.substring(1);
       } else {
@@ -166,15 +215,17 @@ export class DetailsClientComponent {
     } else if (cleanPhone.startsWith('+')) {
       phoneNumber = cleanPhone.substring(1);
     }
-
-    // Open WhatsApp with the phone number
     const whatsappUrl = `https://wa.me/${phoneNumber}`;
     window.open(whatsappUrl, '_blank');
   }
 
   // Add new service
   addService(): void {
-    if (this.selectedService && !this.client.services.includes(this.selectedService)) {
+    if (this.selectedService) {
+      if (this.client.services.includes(this.selectedService)) {
+        alert('هذه الخدمة موجودة بالفعل!');
+        return;
+      }
       this.client.services.push(this.selectedService);
       this.selectedService = '';
     }
@@ -183,54 +234,93 @@ export class DetailsClientComponent {
   // Format amount - removes .00 but keeps decimals when needed
   formatAmount(amount: number): string {
     if (amount % 1 === 0) {
-      // Whole number - no decimals
       return amount.toString();
     } else {
-      // Has decimals - show up to 2 decimal places
       return amount.toFixed(2).replace(/\.?0+$/, '');
     }
   }
 
-  // Remove service with confirmation
+  // Show delete service modal
   removeService(service: string): void {
-    if (confirm(`هل أنت متأكد من حذف خدمة "${service}"؟`)) {
-      this.client.services = this.client.services.filter(s => s !== service);
+    this.serviceToDelete = service;
+    this.showDeleteServiceModal = true;
+  }
+
+  // Cancel service deletion
+  cancelServiceDelete(): void {
+    this.showDeleteServiceModal = false;
+    this.serviceToDelete = '';
+  }
+
+  // Confirm service deletion
+  confirmServiceDelete(): void {
+    if (this.serviceToDelete) {
+      this.client.services = this.client.services.filter(s => s !== this.serviceToDelete);
+      this.showDeleteServiceModal = false;
+      this.serviceToDelete = '';
     }
   }
 
   // Toggle edit mode for personal info
   toggleEditInfo(): void {
     if (this.isEditingInfo) {
-      // Saving - validate phone number
-      if (!this.validateLebanesePhone(this.client.phone)) {
-        this.phoneError = 'رقم الهاتف غير صحيح. يجب أن يكون رقم لبناني صحيح';
+      // Saving - validate all fields
+      if (!this.validatePersonalInfo()) {
         return;
       }
-      this.phoneError = '';
+      this.resetInfoErrors();
     } else {
-      // Starting edit - store temp phone
+      // Starting edit - store temp phone and reset errors
       this.tempPhone = this.client.phone;
+      this.resetInfoErrors();
     }
     this.isEditingInfo = !this.isEditingInfo;
   }
 
-  // Cancel phone edit
-  cancelPhoneEdit(): void {
-    this.client.phone = this.tempPhone;
-    this.phoneError = '';
-    this.isEditingInfo = false;
+  // Validate total required
+  validateTotalRequired(): void {
+    if (this.client.totalRequired === null || this.client.totalRequired === undefined) {
+      this.totalRequiredError = 'الرجاء إدخال المبلغ المطلوب';
+    } else if (this.client.totalRequired < 0) {
+      this.totalRequiredError = 'المبلغ المطلوب يجب أن يكون صفر أو أكثر';
+    } else {
+      this.totalRequiredError = '';
+    }
   }
 
   // Toggle edit mode for total required
   toggleEditTotalRequired(): void {
+    if (this.isEditingTotalRequired) {
+      // Saving - validate
+      this.validateTotalRequired();
+      if (this.totalRequiredError) {
+        return;
+      }
+    } else {
+      this.totalRequiredError = '';
+    }
     this.isEditingTotalRequired = !this.isEditingTotalRequired;
+  }
+
+  // Validate payment amount
+  validatePaymentAmount(): void {
+    if (this.newPaymentAmount === null || this.newPaymentAmount === undefined) {
+      this.paymentAmountError = 'الرجاء إدخال المبلغ';
+    } else if (this.newPaymentAmount <= 0) {
+      this.paymentAmountError = 'المبلغ يجب أن يكون أكبر من صفر';
+    } else {
+      this.paymentAmountError = '';
+    }
   }
 
   // Add payment
   addPayment(): void {
-    if (this.newPaymentAmount <= 0) return;
-    this.isSubmitting = true;
+    this.validatePaymentAmount();
+    if (this.paymentAmountError) {
+      return;
+    }
 
+    this.isSubmitting = true;
     setTimeout(() => {
       const newPayment: Payment = {
         paymentNumber: this.client.payments.length + 1,
@@ -242,6 +332,7 @@ export class DetailsClientComponent {
       this.client.totalPaid += this.newPaymentAmount;
       this.isSubmitting = false;
       this.newPaymentAmount = 0;
+      this.paymentAmountError = '';
 
       this.showSuccess = true;
       setTimeout(() => {
@@ -253,24 +344,69 @@ export class DetailsClientComponent {
   // Edit payment
   editPayment(payment: Payment): void {
     this.editingPaymentId = payment.paymentNumber;
+    this.editPaymentErrors = { amount: '', date: '' };
+  }
+
+  // Validate edit payment field
+  validateEditPaymentField(field: 'amount' | 'date', payment: Payment): void {
+    switch (field) {
+      case 'amount':
+        if (payment.amount === null || payment.amount === undefined) {
+          this.editPaymentErrors.amount = 'الرجاء إدخال المبلغ';
+        } else if (payment.amount <= 0) {
+          this.editPaymentErrors.amount = 'المبلغ يجب أن يكون أكبر من صفر';
+        } else {
+          this.editPaymentErrors.amount = '';
+        }
+        break;
+      case 'date':
+        if (!payment.date) {
+          this.editPaymentErrors.date = 'الرجاء إدخال التاريخ';
+        } else {
+          this.editPaymentErrors.date = '';
+        }
+        break;
+    }
   }
 
   // Save payment edit
   savePayment(payment: Payment): void {
+    this.validateEditPaymentField('amount', payment);
+    this.validateEditPaymentField('date', payment);
+
+    if (this.editPaymentErrors.amount || this.editPaymentErrors.date) {
+      return;
+    }
+
     this.editingPaymentId = null;
+    this.editPaymentErrors = { amount: '', date: '' };
     // Recalculate total paid
     this.client.totalPaid = this.client.payments.reduce((sum, p) => sum + p.amount, 0);
   }
 
-  // Delete payment
+  // Show delete payment modal
   deletePayment(payment: Payment): void {
-    if (confirm('هل أنت متأكد من حذف هذه الدفعة؟')) {
-      this.client.payments = this.client.payments.filter(p => p.paymentNumber !== payment.paymentNumber);
+    this.paymentToDelete = payment;
+    this.showDeletePaymentModal = true;
+  }
+
+  // Cancel payment deletion
+  cancelPaymentDelete(): void {
+    this.showDeletePaymentModal = false;
+    this.paymentToDelete = null;
+  }
+
+  // Confirm payment deletion
+  confirmPaymentDelete(): void {
+    if (this.paymentToDelete) {
+      this.client.payments = this.client.payments.filter(p => p.paymentNumber !== this.paymentToDelete!.paymentNumber);
       this.client.totalPaid = this.client.payments.reduce((sum, p) => sum + p.amount, 0);
       // Renumber payments
       this.client.payments.forEach((p, index) => {
         p.paymentNumber = index + 1;
       });
+      this.showDeletePaymentModal = false;
+      this.paymentToDelete = null;
     }
   }
 }
