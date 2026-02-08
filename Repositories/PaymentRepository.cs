@@ -34,5 +34,35 @@ namespace VelvetSkinClinic.Repositories
 
             return (maxPaymentNumber ?? 0) + 1;
         }
+
+        // ✅ Get payments by date range
+        public async Task<IEnumerable<Payment>> GetPaymentsByDateRangeAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _dbSet
+                .Include(p => p.Client)
+                .Where(p => p.PaymentDate >= DateOnly.FromDateTime(startDate) && p.PaymentDate <= DateOnly.FromDateTime(endDate))
+                .OrderByDescending(p => p.PaymentDate)
+                .ToListAsync();
+        }
+
+        // ✅ Get payments by specific month
+        public async Task<IEnumerable<Payment>> GetPaymentsByMonthAsync(int year, int month)
+        {
+            return await _dbSet
+                .Include(p => p.Client)
+                .Where(p => p.PaymentDate.Year == year && p.PaymentDate.Month == month)
+                .OrderByDescending(p => p.PaymentDate)
+                .ToListAsync();
+        }
+
+        // ✅ Get all payments with client details
+        public async Task<IEnumerable<Payment>> GetAllPaymentsWithClientsAsync()
+        {
+            return await _dbSet
+                .Include(p => p.Client)
+                .Where(p => p.Client.IsActive)
+                .OrderByDescending(p => p.PaymentDate)
+                .ToListAsync();
+        }
     }
 }

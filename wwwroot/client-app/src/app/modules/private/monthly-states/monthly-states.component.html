@@ -1,3 +1,4 @@
+<!-- src/app/components/monthly-states/monthly-states.component.html -->
 <div class="container" dir="rtl">
   <div class="page-header no-print">
     <h1>الحسابات الشهرية</h1>
@@ -11,7 +12,7 @@
     <!-- Filter Type Selection -->
     <div class="filter-tabs">
       <button [class.active]="filterType === 'month'"
-              (click)="filterType = 'month'"
+              (click)="filterType = 'month'; onFilterTypeChange()"
               type="button">
         اختيار شهر
       </button>
@@ -28,6 +29,7 @@
         <label>اختر الشهر:</label>
         <input type="month"
                [(ngModel)]="selectedMonth"
+               (change)="onMonthChange()"
                class="date-input">
       </div>
     </div>
@@ -39,12 +41,14 @@
           <label>من تاريخ:</label>
           <input type="date"
                  [(ngModel)]="startDate"
+                 (change)="onDateRangeChange()"
                  class="date-input">
         </div>
         <div class="form-group">
           <label>إلى تاريخ:</label>
           <input type="date"
                  [(ngModel)]="endDate"
+                 (change)="onDateRangeChange()"
                  class="date-input">
         </div>
       </div>
@@ -60,8 +64,26 @@
     </div>
   </div>
 
+  <!-- Loading State -->
+  <div class="card" *ngIf="loading">
+    <div style="text-align: center; padding: 40px;">
+      <div class="spinner"></div>
+      <p>جاري تحميل التقرير...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="card" *ngIf="error && !loading">
+    <div class="error-message" style="text-align: center; padding: 40px; color: #dc3545;">
+      <p>{{ error }}</p>
+      <button (click)="loadReport()" class="btn-secondary" style="margin-top: 20px;">
+        إعادة المحاولة
+      </button>
+    </div>
+  </div>
+
   <!-- Summary Statistics -->
-  <div class="card">
+  <div class="card" *ngIf="report && !loading">
     <h2 class="card-title">ملخص الفترة: {{ periodDescription }}</h2>
     <div class="summary-grid">
       <div class="summary-box">
@@ -80,7 +102,7 @@
   </div>
 
   <!-- Payments Table -->
-  <div class="card">
+  <div class="card" *ngIf="report && !loading">
     <h2 class="card-title">سجل المدفوعات</h2>
     <div class="table-wrapper">
       <table class="payments-table">
