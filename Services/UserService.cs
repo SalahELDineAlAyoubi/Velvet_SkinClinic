@@ -25,35 +25,7 @@ namespace VelvetSkinClinic.Services
             _config = config;
         }
 
-        public async Task<LoginDto> LoginAsync(LoginRM login)
-        {
-             var user = await _unitOfWork.UsersRepository.FirstOrDefaultAsync(u => u.LoginCustom == login.LoginCustom);
-
-            if (user == null)  throw new UnauthorizedAccessException("Invalid login or password");
-
-             if (!user.IsActif)   throw new UnauthorizedAccessException("Account is disabled");
-
-             if (!_passwordService.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
-                throw new UnauthorizedAccessException("Invalid login or password");
-
-             user.LastLoginDate = DateTime.Now;
-            _unitOfWork.UsersRepository.Update(user);
-            await _unitOfWork.CompleteAsync();
-
-             var token = _tokenService.GenerateToken(user);
-
-            return new LoginDto
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                LoginCustom = user.LoginCustom,
-                UserRole = (UserRoleEnum)user.UserRole,
-                Token = token,
-                TokenExpiration = DateTime.UtcNow.AddSeconds(Convert.ToDouble(_config.GetSection("Authentication:Jwt:Expiration").Value))
-            };
-        }
-
+ 
     public async Task<UserDto> CreateUserAsync(CreateUserRM createUserDto)
         {
             // Check if login already exists

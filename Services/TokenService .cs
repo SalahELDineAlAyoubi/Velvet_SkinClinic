@@ -20,7 +20,7 @@ namespace VelvetSkinClinic.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateAccessToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -40,11 +40,24 @@ namespace VelvetSkinClinic.Services
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddSeconds(_jwtSettings.ExpirationInSeconds),
+                expires: DateTime.UtcNow.AddSeconds(_jwtSettings.AccessTokenExpirationInSeconds),
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public DateTime GetRefreshTokenExpiryTime()
+        {
+            return DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationInDays);
         }
 
         public int? ValidateToken(string token)

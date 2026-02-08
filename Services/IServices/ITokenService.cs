@@ -5,7 +5,9 @@ namespace VelvetSkinClinic.Services.IServices
 {
     public interface ITokenService
     {
-        string GenerateToken(User user);
+        string GenerateAccessToken(User user);
+        string GenerateRefreshToken();
         int? ValidateToken(string token);
+        DateTime GetRefreshTokenExpiryTime();
     }
 }

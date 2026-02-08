@@ -25,6 +25,7 @@ public partial class VelvetSkinClinicContext : DbContext
             entity.HasIndex(e => e.LoginCustom, "UQ__users__7B91A6C3E12D2135").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
             entity.Property(e => e.EntryDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -52,6 +53,8 @@ public partial class VelvetSkinClinicContext : DbContext
             entity.Property(e => e.PasswordSalt)
                 .HasMaxLength(255)
                 .HasColumnName("passwordSalt");
+            entity.Property(e => e.RefreshToken).HasMaxLength(500);
+            entity.Property(e => e.RefreshTokenExpiryTime).HasColumnType("datetime");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -5,6 +5,9 @@
         public string SecretKey { get; set; }
         public string Issuer { get; set; }
         public string Audience { get; set; }
-        public int ExpirationInSeconds { get; set; }
+        public int AccessTokenExpirationInSeconds { get; set; }  
+        public int RefreshTokenExpirationInDays { get; set; }
+
+ 
     }
 }

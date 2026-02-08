@@ -28,4 +28,8 @@ public partial class User
     public string? MobileNumber { get; set; }
 
     public DateTime EntryDate { get; set; }
+
+    public string? RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }

@@ -9,7 +9,8 @@ namespace VelvetSkinClinic.helpersModels.DTOs
         public string LastName { get; set; }
         public string LoginCustom { get; set; }
         public UserRoleEnum UserRole { get; set; }
-        public string Token { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
         public DateTime TokenExpiration { get; set; }
     }
 }
