@@ -402,5 +402,77 @@ namespace VelvetSkinClinic.Services
             var maxId = clients.Any() ? clients.Max(c => c.Id) : 0;
             return (maxId + 1).ToString();
         }
+        // Services/Implementations/ClientService.cs - Add this method
+        public async Task<IEnumerable<BirthdayNotificationDto>> GetUpcomingBirthdaysAsync(int days = 10)
+        {
+            var clients = await _unitOfWork.ClientsRepository.GetActiveClientsAsync();
+            var today = DateTime.Today;
+            var upcomingBirthdays = new List<BirthdayNotificationDto>();
+
+            foreach (var client in clients)
+            {
+                if (string.IsNullOrWhiteSpace(client.Birthday))
+                    continue;
+
+                // Parse birthday (DD/MM or DD/MM/YYYY)
+                var parts = client.Birthday.Split('/');
+                if (parts.Length < 2)
+                    continue;
+
+                if (!int.TryParse(parts[0], out int day) || !int.TryParse(parts[1], out int month))
+                    continue;
+
+                // Calculate days until next birthday
+                var daysUntil = CalculateDaysUntilBirthday(today, day, month);
+
+                // Only include if within the specified days range
+                if (daysUntil >= 0 && daysUntil <= days)
+                {
+                    upcomingBirthdays.Add(new BirthdayNotificationDto
+                    {
+                        Id = client.Id,
+                        ClientIdentifier = client.ClientIdentifier,
+                        Name = client.Name,
+                        Phone = client.Phone,
+                        Birthday = client.Birthday,
+                        DaysUntilBirthday = daysUntil,
+                        IsToday = daysUntil == 0
+                    });
+                }
+            }
+
+            // Sort by days until birthday (closest first)
+            return upcomingBirthdays.OrderBy(b => b.DaysUntilBirthday).ToList();
+        }
+
+        private int CalculateDaysUntilBirthday(DateTime today, int birthDay, int birthMonth)
+        {
+            // Create birthday for this year
+            DateTime birthdayThisYear;
+            try
+            {
+                birthdayThisYear = new DateTime(today.Year, birthMonth, birthDay);
+            }
+            catch
+            {
+                // Handle invalid dates like Feb 29 in non-leap years
+                return -1;
+            }
+
+            // If birthday already passed this year, calculate for next year
+            if (birthdayThisYear < today)
+            {
+                try
+                {
+                    birthdayThisYear = new DateTime(today.Year + 1, birthMonth, birthDay);
+                }
+                catch
+                {
+                    return -1;
+                }
+            }
+
+            return (birthdayThisYear - today).Days;
+        }
     }
 }

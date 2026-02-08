@@ -12,7 +12,8 @@ import {
   UpdatePaymentRequest,
   Payment,
   ClientListItem,
-  CreateClientMinimalRequest
+  CreateClientMinimalRequest,
+  BirthdayNotification
 } from '../models/client.models';
 import { environment } from '../../../environments/environment.prod';
  
@@ -101,7 +102,11 @@ export class ClientService {
     return this.http.get<ClientListItem[]>(`${this.apiUrl}/list`)
       .pipe(catchError(this.handleError));
   }
-
+  getUpcomingBirthdays(days: number = 10): Observable<BirthdayNotification[]> {
+    const params = new HttpParams().set('days', days.toString());
+    return this.http.get<BirthdayNotification[]>(`${this.apiUrl}/birthdays/upcoming`, { params })
+      .pipe(catchError(this.handleError));
+  }
   // Search clients
   searchClients(searchTerm: string): Observable<ClientListItem[]> {
     const params = new HttpParams().set('term', searchTerm);

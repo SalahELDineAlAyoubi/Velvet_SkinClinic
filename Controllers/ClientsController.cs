@@ -308,5 +308,24 @@ namespace VelvetSkinClinic.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء حذف الدفعة" });
             }
         }
+
+
+        // GET: api/clients/birthdays/upcoming?days=10
+        [HttpGet("birthdays/upcoming")]
+        public async Task<IActionResult> GetUpcomingBirthdays([FromQuery] int days = 10)
+        {
+            try
+            {
+                if (days < 1 || days > 365)
+                    return BadRequest(new { message = "عدد الأيام يجب أن يكون بين 1 و 365" });
+
+                var birthdays = await _clientService.GetUpcomingBirthdaysAsync(days);
+                return Ok(birthdays);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "حدث خطأ أثناء جلب أعياد الميلاد" });
+            }
+        }
     }
 }

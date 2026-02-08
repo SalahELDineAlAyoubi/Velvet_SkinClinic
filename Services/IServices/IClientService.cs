@@ -22,5 +22,7 @@ namespace VelvetSkinClinic.Services.IServices
         Task<IEnumerable<ClientListDto>> GetAllClientsListAsync(); 
         Task<IEnumerable<ClientListDto>> SearchClientsAsync(string searchTerm);   
         Task<ClientDto> CreateClientMinimalAsync(CreateClientMinimalRM  createDto);
+        Task<IEnumerable<BirthdayNotificationDto>> GetUpcomingBirthdaysAsync(int days = 10);
+
     }
 }

@@ -65,3 +65,13 @@ export interface CreateClientMinimalRequest {
   name: string;
   phone: string;
 }
+
+ export interface BirthdayNotification {
+  id: number;
+  clientIdentifier: string;
+  name: string;
+  phone: string;
+  birthday: string;
+  daysUntilBirthday: number;
+  isToday: boolean;
+}
