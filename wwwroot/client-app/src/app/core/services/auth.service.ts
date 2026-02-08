@@ -119,7 +119,7 @@ export class AuthService {
     localStorage.setItem('refresh_token', refreshToken);
   }
   private startRefreshTokenTimer(): void {
-     const timeout = 0.5 * 60 * 1000;  
+    const timeout = environment.refreshTokenTimeOut * 60 * 1000;  
 
     this.refreshTokenTimeout = setTimeout(() => {
       this.refreshToken().subscribe();
