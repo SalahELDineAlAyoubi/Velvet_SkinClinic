@@ -10,107 +10,91 @@ using VelvetSkinClinic.Services.IServices;
 
 namespace VelvetSkinClinic.Services
 {
-    public class ServiceService : IServiceService
+    public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPasswordService _passwordService;
+        private readonly ITokenService _tokenService;
+        private readonly IConfiguration _config    ;
 
-        public ServiceService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, ITokenService tokenService, IConfiguration config , IPasswordService passwordService)
         {
             _unitOfWork = unitOfWork;
+            _passwordService = passwordService;
+            _tokenService = tokenService;
+            _config = config;
         }
 
-        public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
+ 
+    public async Task<UserDto> CreateUserAsync(CreateUserRM createUserDto)
         {
-            var services = await _unitOfWork.ServicesRepository.GetActiveServicesAsync();
-            return services.Select(MapToDto);
-        }
-
-        public async Task<IEnumerable<ServiceDto>> SearchServicesAsync(string searchTerm)
-        {
-            var services = await _unitOfWork.ServicesRepository.SearchServicesAsync(searchTerm);
-            return services.Select(MapToDto);
-        }
-
-        public async Task<ServiceDto> GetServiceByIdAsync(int id)
-        {
-            var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id);
-
-            if (service == null || !service.IsActive)
-                throw new KeyNotFoundException("الخدمة غير موجودة");
-
-            return MapToDto(service);
-        }
-
-        public async Task<ServiceDto> CreateServiceAsync(CreateServiceRM createDto)
-        {
-            // Check if service name already exists
-            if (await _unitOfWork.ServicesRepository.ServiceExistsAsync(createDto.Name))
-                throw new InvalidOperationException("اسم الخدمة موجود مسبقاً");
-
-            var service = new Service
+            // Check if login already exists
+            if (await _unitOfWork.UsersRepository.ExistsAsync(u => u.LoginCustom == createUserDto.LoginCustom))
             {
-                Name = createDto.Name.Trim(),
-                Description = createDto.Description?.Trim(),
-                Price = createDto.Price,
-                SessionsNumber = createDto.SessionsNumber,
-                IsActive = true,
-                CreatedDate = DateTime.Now
+                throw new Exception("Login already exists");
+            }
+
+            // Create password hash and salt
+            _passwordService.CreatePasswordHash(
+                createUserDto.Password,
+                out string passwordHash,
+                out string passwordSalt
+            );
+
+            // Create user entity
+            var user = new User
+            {
+                FirstName = createUserDto.FirstName,
+                LastName = createUserDto.LastName,
+                DateOfBirth = createUserDto.DateOfBirth,
+                LoginCustom = createUserDto.LoginCustom,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                UserRole = createUserDto.UserRole,
+                MobileNumber = createUserDto.MobileNumber,
+                IsActif = true,
+                EntryDate = DateTime.Now
             };
 
-            await _unitOfWork.ServicesRepository.AddAsync(service);
+            // Add to database
+            await _unitOfWork.UsersRepository.AddAsync(user);
             await _unitOfWork.CompleteAsync();
 
-            return MapToDto(service);
+            // Return DTO
+            return MapToDto(user);
         }
 
-        public async Task<ServiceDto> UpdateServiceAsync(int id, UpdateServiceRM updateDto)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id);
-
-            if (service == null || !service.IsActive)
-                throw new KeyNotFoundException("الخدمة غير موجودة");
-
-            // Check if new name conflicts with existing service
-            if (await _unitOfWork.ServicesRepository.ServiceExistsAsync(updateDto.Name, id))
-                throw new InvalidOperationException("اسم الخدمة موجود مسبقاً");
-
-            service.Name = updateDto.Name.Trim();
-            service.Description = updateDto.Description?.Trim();
-            service.Price = updateDto.Price;
-            service.SessionsNumber = updateDto.SessionsNumber;
-            service.UpdatedDate = DateTime.Now;
-
-            _unitOfWork.ServicesRepository.Update(service);
-            await _unitOfWork.CompleteAsync();
-
-            return MapToDto(service);
+            var user = await _unitOfWork.UsersRepository.GetByIdAsync(id);
+            return user != null ? MapToDto(user) : null;
         }
 
-        public async Task<bool> DeleteServiceAsync(int id)
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id);
-
-            if (service == null)
-                return false;
-
-             service.IsActive = false;
-            service.UpdatedDate = DateTime.Now;
-
-            _unitOfWork.ServicesRepository.Update(service);
-            await _unitOfWork.CompleteAsync();
-
-            return true;
+            var users = await _unitOfWork.UsersRepository.GetAllAsync();
+            return users.Select(MapToDto);
         }
 
-        private ServiceDto MapToDto(Service service)
+        public async Task<bool> LoginExistsAsync(string loginCustom)
         {
-            return new ServiceDto
+            return await _unitOfWork.UsersRepository.ExistsAsync(u => u.LoginCustom == loginCustom);
+        }
+
+        private UserDto MapToDto(User user)
+        {
+            return new UserDto
             {
-                Id = service.Id,
-                Name = service.Name,
-                Description = service.Description,
-                Price = service.Price,
-                SessionsNumber = service.SessionsNumber
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                LoginCustom = user.LoginCustom,
+                UserRole = user.UserRole,
+                LastLoginDate = user.LastLoginDate,
+                IsActif = user.IsActif,
+                MobileNumber = user.MobileNumber ??"",
+                EntryDate = user.EntryDate
             };
         }
     }

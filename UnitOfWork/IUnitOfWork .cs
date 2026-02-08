@@ -8,6 +8,8 @@ namespace VelvetSkinClinic.Repositories.UnitOfWork
     {
         IRepository<User> UsersRepository { get; }
         IServiceRepository ServicesRepository { get; }
+        IClientRepository ClientsRepository { get; }   
+        IPaymentRepository PaymentsRepository { get; }   
         Task<int> CompleteAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();

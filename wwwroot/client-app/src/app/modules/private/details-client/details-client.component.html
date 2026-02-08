@@ -1,372 +1,383 @@
 <div class="container" dir="rtl">
-  <div class="page-header">
-    <div class="header-content">
-      <h1>تفاصيل العميل</h1>
-      <button type="button" (click)="deleteClient()" class="btn-delete-client">
-        🗑️ حذف العميل
-      </button>
-    </div>
+  <!-- Add at the very top of the container -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>جاري التحميل...</p>
   </div>
 
-  <!-- Client Details -->
-  <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h2 class="card-title" style="margin: 0;">المعلومات الشخصية</h2>
-      <button type="button" (click)="toggleEditInfo()" style="width: auto; padding: 8px 20px; font-size: 0.9rem;">
-        {{ isEditingInfo ? 'حفظ' : 'تعديل' }}
-      </button>
-    </div>
+  <div *ngIf="!loading && client" class="container" dir="rtl">
+    <!-- All existing content -->
 
-    <div class="info-row">
-      <span class="label">الاسم:</span>
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
-        <span class="value" *ngIf="!isEditingInfo">{{ client.name }}</span>
-        <input *ngIf="isEditingInfo"
-               type="text"
-               [(ngModel)]="client.name"
-               class="edit-input"
-               [class.input-error]="infoErrors.name"
-               (blur)="validateInfoField('name')"
-               dir="ltr">
-        <span class="error-message" *ngIf="infoErrors.name">{{ infoErrors.name }}</span>
+    <div class="page-header">
+      <div class="header-content">
+        <h1>تفاصيل العميل</h1>
+        <button type="button" (click)="deleteClient()" class="btn-delete-client">
+          🗑️ حذف العميل
+        </button>
       </div>
     </div>
 
-    <div class="info-row">
-      <span class="label">رقم الهوية:</span>
-      <span class="value">{{ client.id }}</span>
-    </div>
-
-    <div class="info-row">
-      <span class="label">رقم الهاتف:</span>
-      <div class="phone-container">
-        <button type="button" *ngIf="!isEditingInfo"
-                class="whatsapp-btn"
-                (click)="openWhatsApp()"
-                title="فتح واتساب">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-          </svg>
+    <!-- Client Details -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 class="card-title" style="margin: 0;">المعلومات الشخصية</h2>
+        <button type="button" (click)="toggleEditInfo()" style="width: auto; padding: 8px 20px; font-size: 0.9rem;">
+          {{ isEditingInfo ? 'حفظ' : 'تعديل' }}
         </button>
+      </div>
 
+      <div class="info-row">
+        <span class="label">الاسم:</span>
         <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
-          <span dir="ltr" class="value" *ngIf="!isEditingInfo">{{ client.phone }}</span>
+          <span class="value" *ngIf="!isEditingInfo">{{ client.name }}</span>
           <input *ngIf="isEditingInfo"
                  type="text"
-                 [(ngModel)]="client.phone"
+                 [(ngModel)]="client.name"
                  class="edit-input"
-                 [class.input-error]="infoErrors.phone"
-                 (blur)="validateInfoField('phone')"
+                 [class.input-error]="infoErrors.name"
+                 (blur)="validateInfoField('name')"
                  dir="ltr">
-          <div class="error-message" *ngIf="infoErrors.phone">{{ infoErrors.phone }}</div>
+          <span class="error-message" *ngIf="infoErrors.name">{{ infoErrors.name }}</span>
         </div>
       </div>
 
+      <div class="info-row">
+        <span class="label">الرقم التعريفي:</span>
+        <span class="value">{{ client.id }}</span>
       </div>
 
-    <div class="info-row">
-      <span class="label">تاريخ الميلاد:</span>
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
-        <span class="value" *ngIf="!isEditingInfo">{{ client.birthday }}</span>
-        <input *ngIf="isEditingInfo"
-               type="text"
-               [(ngModel)]="client.birthday"
-               class="edit-input"
-               [class.input-error]="infoErrors.birthday"
-               (blur)="validateInfoField('birthday')"
-               placeholder="DD/MM/YYYY"
-               dir="ltr">
-        <span class="error-message" *ngIf="infoErrors.birthday">{{ infoErrors.birthday }}</span>
+      <div class="info-row">
+        <span class="label">رقم الهاتف:</span>
+        <div class="phone-container">
+          <button type="button" *ngIf="!isEditingInfo"
+                  class="whatsapp-btn"
+                  (click)="openWhatsApp()"
+                  title="فتح واتساب">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            </svg>
+          </button>
+
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+            <span dir="ltr" class="value" *ngIf="!isEditingInfo">{{ client.phone }}</span>
+            <input *ngIf="isEditingInfo"
+                   type="text"
+                   [(ngModel)]="client.phone"
+                   class="edit-input"
+                   [class.input-error]="infoErrors.phone"
+                   (blur)="validateInfoField('phone')"
+                   dir="ltr">
+            <div class="error-message" *ngIf="infoErrors.phone">{{ infoErrors.phone }}</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="info-row">
+        <span class="label">تاريخ الميلاد:</span>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+          <span class="value" *ngIf="!isEditingInfo">{{ client.birthday }}</span>
+          <input *ngIf="isEditingInfo"
+                 type="text"
+                 [(ngModel)]="client.birthday"
+                 class="edit-input"
+                 [class.input-error]="infoErrors.birthday"
+                 (blur)="validateInfoField('birthday')"
+                 placeholder="DD/MM/YYYY"
+                 dir="ltr">
+          <span class="error-message" *ngIf="infoErrors.birthday">{{ infoErrors.birthday }}</span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span class="label">الامراض:</span>
+        <span class="value" *ngIf="!isEditingInfo">{{ client.diseases || 'لا يوجد' }}</span>
+        <textarea *ngIf="isEditingInfo"
+                  [(ngModel)]="client.diseases"
+                  class="edit-input"
+                  rows="2"
+                  placeholder="أدخل الامراض"
+                  style="resize: vertical; min-height: 80px;"></textarea>
+      </div>
+
+      <div class="info-row" style="align-items: flex-start;">
+        <span class="label">ملاحظات:</span>
+        <span class="value" *ngIf="!isEditingInfo" style="white-space: pre-wrap;">{{ client.notes || 'لا يوجد' }}</span>
+        <textarea *ngIf="isEditingInfo"
+                  [(ngModel)]="client.notes"
+                  class="edit-input"
+                  rows="4"
+                  placeholder="أدخل ملاحظات"
+                  style="resize: vertical; min-height: 80px;"></textarea>
       </div>
     </div>
 
-    <div class="info-row">
-      <span class="label">الامراض:</span>
-      <span class="value" *ngIf="!isEditingInfo">{{ client.diseases || 'لا يوجد' }}</span>
-      <textarea *ngIf="isEditingInfo"
-                [(ngModel)]="client.diseases"
-                class="edit-input"
-                rows="2"
-                placeholder="أدخل الامراض"
-                style="resize: vertical; min-height: 80px;"></textarea>
-    </div>
+    <!-- Services -->
+    <div class="card">
+      <h2 class="card-title">الخدمات</h2>
 
-    <div class="info-row" style="align-items: flex-start;">
-      <span class="label">ملاحظات:</span>
-      <span class="value" *ngIf="!isEditingInfo" style="white-space: pre-wrap;">{{ client.notes || 'لا يوجد' }}</span>
-      <textarea *ngIf="isEditingInfo"
-                [(ngModel)]="client.notes"
-                class="edit-input"
-                rows="4"
-                placeholder="أدخل ملاحظات"
-                style="resize: vertical; min-height: 80px;"></textarea>
-    </div>
-  </div>
-
-  <!-- Services -->
-  <div class="card">
-    <h2 class="card-title">الخدمات</h2>
-
-    <!-- Add Service Dropdown -->
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-      <select [(ngModel)]="selectedService"
-              class="service-select">
-        <option value="">اختر خدمة جديدة</option>
-        <option *ngFor="let service of availableServicesToAdd" [value]="service">
-          {{ service }}
-        </option>
-      </select>
-      <button type="button"
-              (click)="addService()"
-              [disabled]="!selectedService"
-              style="width: auto; padding: 8px 20px;">
-        إضافة
-      </button>
-    </div>
-
-    <!-- Services List -->
-    <div class="services">
-      <span class="service-badge" *ngFor="let service of client.services">
-        {{ service }}
+      <!-- Add Service Dropdown -->
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <select [(ngModel)]="selectedServiceId"
+                class="service-select">
+          <option value="">اختر خدمة جديدة</option>
+          <option *ngFor="let service of availableServicesToAdd" [value]="service.id">
+            {{ service.name }}
+          </option>
+        </select>
         <button type="button"
-                (click)="removeService(service)"
-                class="remove-service-btn">
-          ×
+                (click)="addService()"
+                [disabled]="!selectedServiceId || isSubmitting"
+                style="width: auto; padding: 8px 20px;">
+          {{ isSubmitting ? 'جاري الإضافة...' : 'إضافة' }}
         </button>
-      </span>
-    </div>
-  </div>
+      </div>
 
-  <!-- Payment Summary -->
-  <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h2 class="card-title" style="margin: 0;">ملخص المدفوعات</h2>
-      <button type="button" (click)="toggleEditTotalRequired()" style="width: auto; padding: 8px 20px; font-size: 0.9rem;">
-        {{ isEditingTotalRequired ? 'حفظ' : 'تعديل المبلغ المطلوب' }}
-      </button>
+      <!-- Services List -->
+      <div class="services">
+        <span class="service-badge" *ngFor="let service of client?.services">
+          {{ service.name }}
+          <button type="button"
+                  (click)="removeService(service)"
+                  class="remove-service-btn"
+                  [disabled]="isSubmitting">
+            ×
+          </button>
+        </span>
+      </div>
     </div>
 
-    <div class="summary-grid">
-      <div class="summary-box" [class.editing]="isEditingTotalRequired">
-        <div class="summary-label">إجمالي المطلوب</div>
-        <div class="summary-amount" *ngIf="!isEditingTotalRequired">
-          {{ formatAmount(client.totalRequired) }} $
+    <!-- Payment Summary -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 class="card-title" style="margin: 0;">ملخص المدفوعات</h2>
+        <button type="button" (click)="toggleEditTotalRequired()" style="width: auto; padding: 8px 20px; font-size: 0.9rem;">
+          {{ isEditingTotalRequired ? 'حفظ' : 'تعديل المبلغ المطلوب' }}
+        </button>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-box" [class.editing]="isEditingTotalRequired">
+          <div class="summary-label">إجمالي المطلوب</div>
+          <div class="summary-amount" *ngIf="!isEditingTotalRequired">
+            {{ formatAmount(client.totalRequired) }} $
+          </div>
+          <div class="summary-amount-edit" *ngIf="isEditingTotalRequired">
+            <input type="number"
+                   [(ngModel)]="client.totalRequired"
+                   class="edit-input-summary"
+                   [class.input-error]="totalRequiredError"
+                   (blur)="validateTotalRequired()"
+                   step="0.01"
+                   min="0">
+            <span class="currency-symbol">$</span>
+          </div>
+          <span class="error-message" *ngIf="totalRequiredError" style="margin-top: 10px;">{{ totalRequiredError }}</span>
         </div>
-        <div class="summary-amount-edit" *ngIf="isEditingTotalRequired">
+        <div class="summary-box">
+          <div class="summary-label">المدفوعات المسددة</div>
+          <div class="summary-amount">{{ formatAmount(client.totalPaid) }} $</div>
+        </div>
+        <div class="summary-box" [class.negative]="remainingAmount < 0">
+          <div class="summary-label">المتبقي</div>
+          <div class="summary-amount">{{ formatAmount(remainingAmount) }} $</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payments Table -->
+    <div class="card">
+      <h2 class="card-title">سجل المدفوعات</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>رقم الدفعة</th>
+              <th>المبلغ</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of client.payments">
+              <td>{{ payment.paymentNumber }}</td>
+              <td>
+                <div style="display: flex; flex-direction: column;">
+                  <span *ngIf="editingPaymentId !== payment.paymentNumber">
+                    {{ formatAmount(payment.amount) }} $
+                  </span>
+                  <input *ngIf="editingPaymentId === payment.paymentNumber"
+                         type="number"
+                         [(ngModel)]="payment.amount"
+                         class="edit-input-table"
+                         [class.input-error]="editPaymentErrors.amount"
+                         (blur)="validateEditPaymentField('amount', payment)"
+                         step="0.01">
+                  <span class="error-message" *ngIf="editingPaymentId === payment.paymentNumber && editPaymentErrors.amount">
+                    {{ editPaymentErrors.amount }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; flex-direction: column;">
+                  <span *ngIf="editingPaymentId !== payment.paymentNumber">
+                    {{ payment.date }}
+                  </span>
+                  <input *ngIf="editingPaymentId === payment.paymentNumber"
+                         type="date"
+                         [(ngModel)]="payment.date"
+                         class="edit-input-table"
+                         [class.input-error]="editPaymentErrors.date"
+                         (blur)="validateEditPaymentField('date', payment)">
+                  <span class="error-message" *ngIf="editingPaymentId === payment.paymentNumber && editPaymentErrors.date">
+                    {{ editPaymentErrors.date }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button *ngIf="editingPaymentId !== payment.paymentNumber"
+                          type="button"
+                          (click)="editPayment(payment)"
+                          class="btn-edit-cl">
+                    تعديل
+                  </button>
+                  <button *ngIf="editingPaymentId === payment.paymentNumber"
+                          type="button"
+                          (click)="savePayment(payment)"
+                          class="btn-save">
+                    حفظ
+                  </button>
+                  <button type="button"
+                          (click)="deletePayment(payment)"
+                          class="btn-delete">
+                    حذف
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="client.payments.length === 0">
+              <td colspan="4" class="empty">لا توجد مدفوعات</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add Payment -->
+    <div class="card">
+      <h2 class="card-title">إضافة دفعة جديدة</h2>
+      <form (ngSubmit)="addPayment()" #paymentForm="ngForm">
+        <div class="form-group">
+          <label>المبلغ ($)</label>
           <input type="number"
-                 [(ngModel)]="client.totalRequired"
-                 class="edit-input-summary"
-                 [class.input-error]="totalRequiredError"
-                 (blur)="validateTotalRequired()"
-                 step="0.01"
-                 min="0">
-          <span class="currency-symbol">$</span>
+                 [(ngModel)]="newPaymentAmount"
+                 name="amount"
+                 class="form-input"
+                 [class.input-error]="paymentAmountError"
+                 placeholder="أدخل المبلغ"
+                 (blur)="validatePaymentAmount()"
+                 min="0.01"
+                 step="0.01">
+          <span class="error-message" *ngIf="paymentAmountError">{{ paymentAmountError }}</span>
         </div>
-        <span class="error-message" *ngIf="totalRequiredError" style="margin-top: 10px;">{{ totalRequiredError }}</span>
-      </div>
-      <div class="summary-box">
-        <div class="summary-label">المدفوعات المسددة</div>
-        <div class="summary-amount">{{ formatAmount(client.totalPaid) }} $</div>
-      </div>
-      <div class="summary-box" [class.negative]="remainingAmount < 0">
-        <div class="summary-label">المتبقي</div>
-        <div class="summary-amount">{{ formatAmount(remainingAmount) }} $</div>
-      </div>
+        <button type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'جاري الإضافة...' : 'إضافة الدفعة' }}
+        </button>
+      </form>
     </div>
-  </div>
 
-  <!-- Payments Table -->
-  <div class="card">
-    <h2 class="card-title">سجل المدفوعات</h2>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>رقم الدفعة</th>
-            <th>المبلغ</th>
-            <th>التاريخ</th>
-            <th>إجراءات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let payment of client.payments">
-            <td>{{ payment.paymentNumber }}</td>
-            <td>
-              <div style="display: flex; flex-direction: column;">
-                <span *ngIf="editingPaymentId !== payment.paymentNumber">
-                  {{ formatAmount(payment.amount) }} $
-                </span>
-                <input *ngIf="editingPaymentId === payment.paymentNumber"
-                       type="number"
-                       [(ngModel)]="payment.amount"
-                       class="edit-input-table"
-                       [class.input-error]="editPaymentErrors.amount"
-                       (blur)="validateEditPaymentField('amount', payment)"
-                       step="0.01">
-                <span class="error-message" *ngIf="editingPaymentId === payment.paymentNumber && editPaymentErrors.amount">
-                  {{ editPaymentErrors.amount }}
-                </span>
-              </div>
-            </td>
-            <td>
-              <div style="display: flex; flex-direction: column;">
-                <span *ngIf="editingPaymentId !== payment.paymentNumber">
-                  {{ payment.date }}
-                </span>
-                <input *ngIf="editingPaymentId === payment.paymentNumber"
-                       type="date"
-                       [(ngModel)]="payment.date"
-                       class="edit-input-table"
-                       [class.input-error]="editPaymentErrors.date"
-                       (blur)="validateEditPaymentField('date', payment)">
-                <span class="error-message" *ngIf="editingPaymentId === payment.paymentNumber && editPaymentErrors.date">
-                  {{ editPaymentErrors.date }}
-                </span>
-              </div>
-            </td>
-            <td>
-              <div class="action-buttons">
-                <button *ngIf="editingPaymentId !== payment.paymentNumber"
-                        type="button"
-                        (click)="editPayment(payment)"
-                        class="btn-edit-cl">
-                  تعديل
-                </button>
-                <button *ngIf="editingPaymentId === payment.paymentNumber"
-                        type="button"
-                        (click)="savePayment(payment)"
-                        class="btn-save">
-                  حفظ
-                </button>
-                <button type="button"
-                        (click)="deletePayment(payment)"
-                        class="btn-delete">
-                  حذف
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="client.payments.length === 0">
-            <td colspan="4" class="empty">لا توجد مدفوعات</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Success Message -->
+    <div class="success-msg" *ngIf="showSuccess">
+      تم إضافة الدفعة بنجاح ✓
     </div>
-  </div>
 
-  <!-- Add Payment -->
-  <div class="card">
-    <h2 class="card-title">إضافة دفعة جديدة</h2>
-    <form (ngSubmit)="addPayment()" #paymentForm="ngForm">
-      <div class="form-group">
-        <label>المبلغ ($)</label>
-        <input type="number"
-               [(ngModel)]="newPaymentAmount"
-               name="amount"
-               class="form-input"
-               [class.input-error]="paymentAmountError"
-               placeholder="أدخل المبلغ"
-               (blur)="validatePaymentAmount()"
-               min="0.01"
-               step="0.01">
-        <span class="error-message" *ngIf="paymentAmountError">{{ paymentAmountError }}</span>
-      </div>
-      <button type="submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'جاري الإضافة...' : 'إضافة الدفعة' }}
-      </button>
-    </form>
-  </div>
+    <!-- Delete Client Confirmation Modal -->
+    <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+      <div class="modal-content delete-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header danger header-mod">
+          <h2>⚠️ تأكيد حذف العميل</h2>
+          <button class="btn-close" (click)="cancelDelete()">×</button>
+        </div>
 
-  <!-- Success Message -->
-  <div class="success-msg" *ngIf="showSuccess">
-    تم إضافة الدفعة بنجاح ✓
-  </div>
+        <div class="modal-body">
+          <div class="warning-box">
+            <h3>هل أنت متأكد من حذف العميل "{{ client.name }}"؟</h3>
+            <p class="warning-text">سيتم حذف جميع البيانات التالية بشكل نهائي:</p>
+            <ul class="warning-list">
+              <li>المعلومات الشخصية</li>
+              <li>الخدمات المرتبطة ({{ client.services.length }} خدمة)</li>
+              <li>سجل المدفوعات ({{ client.payments.length }} دفعة)</li>
+            </ul>
+            <p class="danger-text">⚠️ هذا الإجراء لا يمكن التراجع عنه!</p>
+          </div>
+        </div>
 
-  <!-- Delete Client Confirmation Modal -->
-  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
-    <div class="modal-content delete-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header danger header-mod">
-        <h2>⚠️ تأكيد حذف العميل</h2>
-        <button class="btn-close" (click)="cancelDelete()">×</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="warning-box">
-          <h3>هل أنت متأكد من حذف العميل "{{ client.name }}"؟</h3>
-          <p class="warning-text">سيتم حذف جميع البيانات التالية بشكل نهائي:</p>
-          <ul class="warning-list">
-            <li>المعلومات الشخصية</li>
-            <li>الخدمات المرتبطة ({{ client.services.length }} خدمة)</li>
-            <li>سجل المدفوعات ({{ client.payments.length }} دفعة)</li>
-          </ul>
-          <p class="danger-text">⚠️ هذا الإجراء لا يمكن التراجع عنه!</p>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="cancelDelete()">
+            إلغاء
+          </button>
+          <button type="button" class="btn-delete-confirm" (click)="confirmDelete()">
+            حذف نهائياً
+          </button>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-cancel" (click)="cancelDelete()">
-          إلغاء
-        </button>
-        <button type="button" class="btn-delete-confirm" (click)="confirmDelete()">
-          حذف نهائياً
-        </button>
-      </div>
     </div>
-  </div>
 
-  <!-- Delete Service Confirmation Modal -->
-  <div class="modal-overlay" *ngIf="showDeleteServiceModal" (click)="cancelServiceDelete()">
-    <div class="modal-content delete-modal-small" (click)="$event.stopPropagation()">
-      <div class="modal-header danger-header">
-        <h3 class="modal-title">⚠️ حذف الخدمة</h3>
-        <button type="button" class="close-btn" (click)="cancelServiceDelete()">✕</button>
-      </div>
+    <!-- Delete Service Confirmation Modal -->
+    <div class="modal-overlay" *ngIf="showDeleteServiceModal" (click)="cancelServiceDelete()">
+      <div class="modal-content delete-modal-small" (click)="$event.stopPropagation()">
+        <div class="modal-header danger-header">
+          <h3 class="modal-title">⚠️ حذف الخدمة</h3>
+          <button type="button" class="close-btn" (click)="cancelServiceDelete()">✕</button>
+        </div>
 
-      <div class="modal-body">
-        <div class="delete-confirmation">
-          <div class="warning-icon">🗑️</div>
-          <h4>هل أنت متأكد من حذف هذه الخدمة؟</h4>
-          <p class="service-name-highlight">{{ serviceToDelete }}</p>
+        <div class="modal-body">
+          <div class="delete-confirmation">
+            <div class="warning-icon">🗑️</div>
+            <h4>هل أنت متأكد من حذف هذه الخدمة؟</h4>
+            <p class="service-name-highlight">{{ serviceToDelete }}</p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" (click)="cancelServiceDelete()">
+            إلغاء
+          </button>
+          <button type="button" class="btn-modal-delete" (click)="confirmServiceDelete()">
+            🗑️ حذف
+          </button>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-cancel" (click)="cancelServiceDelete()">
-          إلغاء
-        </button>
-        <button type="button" class="btn-modal-delete" (click)="confirmServiceDelete()">
-          🗑️ حذف
-        </button>
-      </div>
     </div>
-  </div>
 
-  <!-- Delete Payment Confirmation Modal -->
-  <div class="modal-overlay" *ngIf="showDeletePaymentModal" (click)="cancelPaymentDelete()">
-    <div class="modal-content delete-modal-small" (click)="$event.stopPropagation()">
-      <div class="modal-header danger-header">
-        <h3 class="modal-title">⚠️ حذف الدفعة</h3>
-        <button type="button" class="close-btn" (click)="cancelPaymentDelete()">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="delete-confirmation">
-          <div class="warning-icon">🗑️</div>
-          <h4>هل أنت متأكد من حذف هذه الدفعة؟</h4>
-          <p class="payment-info-highlight">
-            <strong>المبلغ:</strong> {{ formatAmount(paymentToDelete?.amount || 0) }} $<br>
-            <strong>التاريخ:</strong> {{ paymentToDelete?.date }}
-          </p>
+    <!-- Delete Payment Confirmation Modal -->
+    <div class="modal-overlay" *ngIf="showDeletePaymentModal" (click)="cancelPaymentDelete()">
+      <div class="modal-content delete-modal-small" (click)="$event.stopPropagation()">
+        <div class="modal-header danger-header">
+          <h3 class="modal-title">⚠️ حذف الدفعة</h3>
+          <button type="button" class="close-btn" (click)="cancelPaymentDelete()">✕</button>
         </div>
-      </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-cancel" (click)="cancelPaymentDelete()">
-          إلغاء
-        </button>
-        <button type="button" class="btn-modal-delete" (click)="confirmPaymentDelete()">
-          🗑️ حذف
-        </button>
+        <div class="modal-body">
+          <div class="delete-confirmation">
+            <div class="warning-icon">🗑️</div>
+            <h4>هل أنت متأكد من حذف هذه الدفعة؟</h4>
+            <p class="payment-info-highlight">
+              <strong>المبلغ:</strong> {{ formatAmount(paymentToDelete?.amount || 0) }} $<br>
+              <strong>التاريخ:</strong> {{ paymentToDelete?.date }}
+            </p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" (click)="cancelPaymentDelete()">
+            إلغاء
+          </button>
+          <button type="button" class="btn-modal-delete" (click)="confirmPaymentDelete()">
+            🗑️ حذف
+          </button>
+        </div>
       </div>
     </div>
   </div>

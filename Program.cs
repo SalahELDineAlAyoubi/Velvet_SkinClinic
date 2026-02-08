@@ -88,7 +88,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
-
+builder.Services.AddScoped<IClientService,  ClientService>();
 
 builder.Services.AddDbContext<VelvetSkinClinicContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -20,4 +20,6 @@ public partial class Service
     public DateTime CreatedDate { get; set; }
 
     public DateTime? UpdatedDate { get; set; }
+
+    public virtual ICollection<ClientService> ClientServices { get; set; } = new List<ClientService>();
 }

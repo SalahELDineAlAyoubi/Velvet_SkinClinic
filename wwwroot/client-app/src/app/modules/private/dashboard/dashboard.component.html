@@ -1,142 +1,150 @@
 <div class="container" dir="rtl">
-  <div class="page-header">
-    <div class="header-content">
-      <div>
-        <h1>قائمة العملاء</h1>
-        <p class="subtitle">إدارة ومتابعة جميع العملاء</p>
-      </div>
-      <button class="btn-add-client" (click)="openAddModal()">
-        <span class="plus-icon">+</span>
-        إضافة عميل جديد
-      </button>
-    </div>
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>جاري التحميل...</p>
   </div>
 
-  <!-- Search and Stats Card -->
-  <div class="card">
-    <div class="search-section">
-      <div class="search-wrapper">
-        <input type="text"
-               class="search-input"
-               placeholder="🔍 ابحث عن عميل (الاسم، الهاتف، أو الرقم)"
-               [(ngModel)]="searchTerm">
-      </div>
-      <div class="stats">
-        <span class="stat-badge">
-          <strong>{{ filteredClients.length }}</strong> عميل
-        </span>
+  <div *ngIf="!loading    " class="container" dir="rtl">
+    <div class="page-header">
+      <div class="header-content">
+        <div>
+          <h1>قائمة العملاء</h1>
+          <p class="subtitle">إدارة ومتابعة جميع العملاء</p>
+        </div>
+        <button class="btn-add-client" (click)="openAddModal()">
+          <span class="plus-icon">+</span>
+          إضافة عميل جديد
+        </button>
       </div>
     </div>
-  </div>
 
-  <!-- Clients Table Card -->
-  <div class="card">
-    <div class="table-wrapper">
-      <table class="clients-table">
-        <thead>
-          <tr>
-            <th>رقم التعريف</th>
-            <th>الاسم</th>
-            <th>رقم الهاتف</th>
-            <th>الإجراءات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let client of paginatedClients"
-              class="client-row">
-            <td><span class="client-id">{{ client.id }}</span></td>
-            <td><strong>{{ client.name }}</strong></td>
-            <td dir="ltr" class="mobile">{{ client.mobile }}</td>
-            <td (click)="goToClient(client.id)">
-              <button class="btn-view" (click)="goToClient(client.id); $event.stopPropagation()">
-                عرض التفاصيل ←
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="filteredClients.length === 0">
-            <td colspan="4" class="empty-state">
-              <div class="empty-content">
-                <span class="empty-icon">🔍</span>
-                <p>لا توجد نتائج</p>
-                <small>حاول البحث بكلمات مختلفة</small>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination" *ngIf="totalPages > 1">
-      <button class="pagination-btn"
-              (click)="prevPage()"
-              [disabled]="page === 1">
-        ← السابق
-      </button>
-      <div class="page-info">
-        <span class="current-page">{{ page }}</span>
-        <span class="separator">من</span>
-        <span class="total-pages">{{ totalPages }}</span>
-      </div>
-      <button class="pagination-btn"
-              (click)="nextPage()"
-              [disabled]="page === totalPages">
-        التالي →
-      </button>
-    </div>
-  </div>
-
-  <!-- Add Client Modal -->
-  <div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>إضافة عميل جديد</h2>
-        <button class="btn-close" (click)="closeAddModal()">×</button>
-      </div>
-
-      <form (ngSubmit)="addClient()" #clientForm="ngForm">
-        <div class="form-group">
-          <label for="clientName">الاسم الكامل <span class="required">*</span></label>
+    <!-- Search and Stats Card -->
+    <div class="card">
+      <div class="search-section">
+        <div class="search-wrapper">
           <input type="text"
-                 id="clientName"
-                 [(ngModel)]="newClient.name"
-                 name="name"
-                 class="form-input"
-                 [class.input-error]="formErrors.name"
-                 placeholder="أدخل الاسم الكامل"
-                 required>
-          <div class="error-message" *ngIf="formErrors.name">{{ formErrors.name }}</div>
+                 class="search-input"
+                 placeholder="🔍 ابحث عن عميل (الاسم، الهاتف، أو الرقم)"
+                 [(ngModel)]="searchTerm">
         </div>
-
-        <div class="form-group">
-          <label for="clientMobile">رقم الهاتف <span class="required">*</span></label>
-          <input type="text"
-                 id="clientMobile"
-                 [(ngModel)]="newClient.mobile"
-                 name="mobile"
-                 class="form-input"
-                 [class.input-error]="formErrors.mobile"
-                 placeholder="03 XXX XXX"
-                 dir="ltr"
-                 required>
-          <div class="error-message" *ngIf="formErrors.mobile">{{ formErrors.mobile }}</div>
-          <div class="phone-hint">الأرقام المقبولة: 03, 70, 71, 76, 78, 79, 81 (موبايل) أو 01, 04, 05, 06, 07, 09 (أرضي)</div>
+        <div class="stats">
+          <span class="stat-badge">
+            <strong>{{ filteredClients.length }}</strong> عميل
+          </span>
         </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-cancel" (click)="closeAddModal()">
-            إلغاء
-          </button>
-          <button type="submit" class="btn-submit">
-            إضافة العميل
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
 
-  <!-- Success Message -->
-  <div class="success-msg" *ngIf="showSuccess">
-    تم إضافة العميل بنجاح ✓
+    <!-- Clients Table Card -->
+    <div class="card">
+      <div class="table-wrapper">
+        <table class="clients-table">
+          <thead>
+            <tr>
+              <th>رقم التعريف</th>
+              <th>الاسم</th>
+              <th>رقم الهاتف</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let client of paginatedClients" class="client-row">
+
+              <td><span class="client-id">{{ client.id }}</span></td>
+              <td><strong>{{ client.name }}</strong></td>
+              <td dir="ltr" class="mobile">{{ client.phone }}</td>
+              <td (click)="goToClient(client.id)">
+                <button class="btn-view" (click)="goToClient(client.id); $event.stopPropagation()">
+                  عرض التفاصيل ←
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredClients.length === 0">
+              <td colspan="4" class="empty-state">
+                <div class="empty-content">
+                  <span class="empty-icon">🔍</span>
+                  <p>لا توجد نتائج</p>
+                  <small>حاول البحث بكلمات مختلفة</small>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button class="pagination-btn"
+                (click)="prevPage()"
+                [disabled]="page === 1">
+          ← السابق
+        </button>
+        <div class="page-info">
+          <span class="current-page">{{ page }}</span>
+          <span class="separator">من</span>
+          <span class="total-pages">{{ totalPages }}</span>
+        </div>
+        <button class="pagination-btn"
+                (click)="nextPage()"
+                [disabled]="page === totalPages">
+          التالي →
+        </button>
+      </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>إضافة عميل جديد</h2>
+          <button class="btn-close" (click)="closeAddModal()">×</button>
+        </div>
+
+        <form (ngSubmit)="addClient()" #clientForm="ngForm">
+          <div class="form-group">
+            <label for="clientName">الاسم الكامل <span class="required">*</span></label>
+            <input type="text"
+                   id="clientName"
+                   [(ngModel)]="newClient.name"
+                   name="name"
+                   class="form-input"
+                   [class.input-error]="formErrors.name"
+                   placeholder="أدخل الاسم الكامل"
+                   required>
+            <div class="error-message" *ngIf="formErrors.name">{{ formErrors.name }}</div>
+          </div>
+
+          <div class="form-group">
+            <label for="clientMobile">رقم الهاتف <span class="required">*</span></label>
+            <input type="text"
+                   id="clientMobile"
+                   [(ngModel)]="newClient.phone"
+                   name="phone"
+                   class="form-input"
+                   [class.input-error]="formErrors.phone"
+                   placeholder="03 XXX XXX"
+                   dir="ltr"
+                   required>
+            <div class="error-message" *ngIf="formErrors.phone">{{ formErrors.phone }}</div>
+            <div class="phone-hint">الأرقام المقبولة: 03, 70, 71, 76, 78, 79, 81 (موبايل) أو 01, 04, 05, 06, 07, 09 (أرضي)</div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" (click)="closeAddModal()">
+              إلغاء
+            </button>
+            <button type="submit" class="btn-submit" [disabled]="submitting">
+              {{ submitting ? 'جاري الإضافة...' : 'إضافة العميل' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-msg" *ngIf="showSuccess">
+      تم إضافة العميل بنجاح ✓
+    </div>
   </div>
 </div>
