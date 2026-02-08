@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../../core/services/auth.service';
+ 
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -16,13 +17,20 @@ export class LoginComponent {
     password: ''
   };
 
-  //rememberMe = false;
   showPassword = false;
   submitted = false;
   loading = false;
   errorMessage = '';
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
+    // Redirect if already logged in
+    if (this.authService.isAuthenticated) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -34,35 +42,38 @@ export class LoginComponent {
 
     // Validation
     if (!this.credentials.username || !this.credentials.password) {
+      this.errorMessage = 'يرجى إدخال اسم المستخدم وكلمة المرور';
       return;
     }
 
     this.loading = true;
 
-    // Simulate API call
-    setTimeout(() => {
-      // Example login logic - replace with your actual authentication service
-      if (this.credentials.username === 'admin' && this.credentials.password === 'admin123') {
-        // Successful login
-        localStorage.setItem('access_token', 'sdfdsfsdfds.sdfsdfsdfsd.sdfsdfsd');
-        // Navigate to clients list or dashboard
-        this.router.navigate(['/dashboard']);
-      } else {
-        // Failed login
-        this.errorMessage = 'اسم المستخدم أو كلمة المرور غير صحيحة';
-        this.loading = false;
-      }
-    }, 1500);
+    // Call authentication service
+    this.authService.login(this.credentials.username, this.credentials.password)
+      .subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+          // Navigate to dashboard
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          console.error('Login error:', error);
+          this.errorMessage = error.message || 'اسم المستخدم أو كلمة المرور غير صحيحة';
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      });
   }
 
-  // Optional: Add methods for social login, forgot password, etc.
   onForgotPassword(): void {
-    // Handle forgot password
     console.log('Forgot password clicked');
+    // Navigate to forgot password page
+    // this.router.navigate(['/forgot-password']);
   }
 
   onRegister(): void {
-    // Navigate to registration page
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/register']);
   }
 }
