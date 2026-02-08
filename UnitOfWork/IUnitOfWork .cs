@@ -7,6 +7,7 @@ namespace VelvetSkinClinic.Repositories.UnitOfWork
     public interface IUnitOfWork : IDisposable
     {
         IRepository<User> UsersRepository { get; }
+        IServiceRepository ServicesRepository { get; }
         Task<int> CompleteAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();

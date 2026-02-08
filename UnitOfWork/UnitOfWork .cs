@@ -12,7 +12,7 @@ namespace VelvetSkinClinic.Repositories.UnitOfWork
         private IDbContextTransaction _transaction;
 
         private IRepository<User> _users;
-
+        private IServiceRepository _services;
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
@@ -25,7 +25,14 @@ namespace VelvetSkinClinic.Repositories.UnitOfWork
                 return _users;
             }
         }
-
+        public IServiceRepository ServicesRepository
+        {
+            get
+            {
+                _services ??= new ServiceRepository(_context);
+                return _services;
+            }
+        }
         public async Task BeginTransactionAsync()
         {
             _transaction = await _context.Database.BeginTransactionAsync();

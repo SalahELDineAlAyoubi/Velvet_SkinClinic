@@ -2,15 +2,12 @@
 
 namespace VelvetSkinClinic.helpersModels.DTOs
 {
-    public class LoginDto
+    public class ServiceDto
     {
-        public int UserId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string LoginCustom { get; set; }
-        public UserRoleEnum UserRole { get; set; }
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
-        public DateTime TokenExpiration { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public int SessionsNumber { get; set; }
     }
 }

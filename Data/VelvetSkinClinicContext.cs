@@ -12,10 +12,30 @@ public partial class VelvetSkinClinicContext : DbContext
     {
     }
 
+    public virtual DbSet<Service> Services { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Service>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Services__3214EC07DF88CBC5");
+
+            entity.HasIndex(e => e.IsActive, "IX_Services_IsActive");
+
+            entity.HasIndex(e => e.Name, "IX_Services_Name");
+
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__users__3213E83F5B6E0A65");

@@ -10,91 +10,107 @@ using VelvetSkinClinic.Services.IServices;
 
 namespace VelvetSkinClinic.Services
 {
-    public class UserService : IUserService
+    public class ServiceService : IServiceService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordService _passwordService;
-        private readonly ITokenService _tokenService;
-        private readonly IConfiguration _config    ;
 
-        public UserService(IUnitOfWork unitOfWork, ITokenService tokenService, IConfiguration config , IPasswordService passwordService)
+        public ServiceService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _passwordService = passwordService;
-            _tokenService = tokenService;
-            _config = config;
         }
 
- 
-    public async Task<UserDto> CreateUserAsync(CreateUserRM createUserDto)
+        public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
         {
-            // Check if login already exists
-            if (await _unitOfWork.UsersRepository.ExistsAsync(u => u.LoginCustom == createUserDto.LoginCustom))
-            {
-                throw new Exception("Login already exists");
-            }
+            var services = await _unitOfWork.ServicesRepository.GetActiveServicesAsync();
+            return services.Select(MapToDto);
+        }
 
-            // Create password hash and salt
-            _passwordService.CreatePasswordHash(
-                createUserDto.Password,
-                out string passwordHash,
-                out string passwordSalt
-            );
+        public async Task<IEnumerable<ServiceDto>> SearchServicesAsync(string searchTerm)
+        {
+            var services = await _unitOfWork.ServicesRepository.SearchServicesAsync(searchTerm);
+            return services.Select(MapToDto);
+        }
 
-            // Create user entity
-            var user = new User
+        public async Task<ServiceDto> GetServiceByIdAsync(int id)
+        {
+            var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id);
+
+            if (service == null || !service.IsActive)
+                throw new KeyNotFoundException("الخدمة غير موجودة");
+
+            return MapToDto(service);
+        }
+
+        public async Task<ServiceDto> CreateServiceAsync(CreateServiceRM createDto)
+        {
+            // Check if service name already exists
+            if (await _unitOfWork.ServicesRepository.ServiceExistsAsync(createDto.Name))
+                throw new InvalidOperationException("اسم الخدمة موجود مسبقاً");
+
+            var service = new Service
             {
-                FirstName = createUserDto.FirstName,
-                LastName = createUserDto.LastName,
-                DateOfBirth = createUserDto.DateOfBirth,
-                LoginCustom = createUserDto.LoginCustom,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                UserRole = createUserDto.UserRole,
-                MobileNumber = createUserDto.MobileNumber,
-                IsActif = true,
-                EntryDate = DateTime.Now
+                Name = createDto.Name.Trim(),
+                Description = createDto.Description?.Trim(),
+                Price = createDto.Price,
+                SessionsNumber = createDto.SessionsNumber,
+                IsActive = true,
+                CreatedDate = DateTime.Now
             };
 
-            // Add to database
-            await _unitOfWork.UsersRepository.AddAsync(user);
+            await _unitOfWork.ServicesRepository.AddAsync(service);
             await _unitOfWork.CompleteAsync();
 
-            // Return DTO
-            return MapToDto(user);
+            return MapToDto(service);
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        public async Task<ServiceDto> UpdateServiceAsync(int id, UpdateServiceRM updateDto)
         {
-            var user = await _unitOfWork.UsersRepository.GetByIdAsync(id);
-            return user != null ? MapToDto(user) : null;
+            var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id);
+
+            if (service == null || !service.IsActive)
+                throw new KeyNotFoundException("الخدمة غير موجودة");
+
+            // Check if new name conflicts with existing service
+            if (await _unitOfWork.ServicesRepository.ServiceExistsAsync(updateDto.Name, id))
+                throw new InvalidOperationException("اسم الخدمة موجود مسبقاً");
+
+            service.Name = updateDto.Name.Trim();
+            service.Description = updateDto.Description?.Trim();
+            service.Price = updateDto.Price;
+            service.SessionsNumber = updateDto.SessionsNumber;
+            service.UpdatedDate = DateTime.Now;
+
+            _unitOfWork.ServicesRepository.Update(service);
+            await _unitOfWork.CompleteAsync();
+
+            return MapToDto(service);
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+        public async Task<bool> DeleteServiceAsync(int id)
         {
-            var users = await _unitOfWork.UsersRepository.GetAllAsync();
-            return users.Select(MapToDto);
+            var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id);
+
+            if (service == null)
+                return false;
+
+             service.IsActive = false;
+            service.UpdatedDate = DateTime.Now;
+
+            _unitOfWork.ServicesRepository.Update(service);
+            await _unitOfWork.CompleteAsync();
+
+            return true;
         }
 
-        public async Task<bool> LoginExistsAsync(string loginCustom)
+        private ServiceDto MapToDto(Service service)
         {
-            return await _unitOfWork.UsersRepository.ExistsAsync(u => u.LoginCustom == loginCustom);
-        }
-
-        private UserDto MapToDto(User user)
-        {
-            return new UserDto
+            return new ServiceDto
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                DateOfBirth = user.DateOfBirth,
-                LoginCustom = user.LoginCustom,
-                UserRole = user.UserRole,
-                LastLoginDate = user.LastLoginDate,
-                IsActif = user.IsActif,
-                MobileNumber = user.MobileNumber ??"",
-                EntryDate = user.EntryDate
+                Id = service.Id,
+                Name = service.Name,
+                Description = service.Description,
+                Price = service.Price,
+                SessionsNumber = service.SessionsNumber
             };
         }
     }

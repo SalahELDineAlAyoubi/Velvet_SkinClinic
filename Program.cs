@@ -87,6 +87,7 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
 
 
 builder.Services.AddDbContext<VelvetSkinClinicContext>(options =>

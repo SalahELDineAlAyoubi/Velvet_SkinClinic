@@ -20,7 +20,8 @@
         <input type="text"
                class="search-input"
                placeholder="🔍 ابحث عن خدمة..."
-               [(ngModel)]="searchTerm">
+               [(ngModel)]="searchTerm"
+               (ngModelChange)="onSearchChange()">
       </div>
       <div class="stats">
         <span class="stat-badge">
@@ -77,7 +78,7 @@
                  name="sessionsNumber"
                  class="form-input"
                  [class.input-error]="addErrors.sessionsNumber"
-                 placeholder="مثال: 30 دقيقة"
+                 placeholder="مثال: 10 جلسات"
                  min="0"
                  (blur)="validateAddField('sessionsNumber')">
           <span class="error-message" *ngIf="addErrors.sessionsNumber">{{ addErrors.sessionsNumber }}</span>

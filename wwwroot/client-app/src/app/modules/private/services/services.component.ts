@@ -1,15 +1,10 @@
-import { Component } from '@angular/core';
+// src/app/components/services/services.component.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  sessionsNumber: number; // e.g., "30 دقيقة"
-}
-
+import { CreateServiceRequest, Service, UpdateServiceRequest } from '../../../core/models/service.models';
+import { ServiceService } from '../../../core/services/service.service';
+ 
 @Component({
   selector: 'app-services',
   standalone: true,
@@ -17,27 +12,21 @@ interface Service {
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
-export class ServicesComponent {
-  services: Service[] = [
-    { id: 1, name: 'Hifu', description: 'شد الوجه بالموجات فوق الصوتية', price: 200, sessionsNumber: 5 },
-    { id: 2, name: 'BBL', description: 'تكبير الأرداف البرازيلي', price: 350, sessionsNumber: 5 },
-    { id: 3, name: 'Cavitation', description: 'تفتيت الدهون بالموجات الصوتية', price: 150, sessionsNumber: 6 },
-    { id: 4, name: 'Laser', description: 'إزالة الشعر بالليزر', price: 100, sessionsNumber: 6 },
-    { id: 5, name: 'Botox', description: 'حقن البوتوكس للتجاعيد', price: 250, sessionsNumber: 15 },
-    { id: 6, name: 'Filler', description: 'حشوات الوجه والشفاه', price: 280, sessionsNumber: 3 },
-    { id: 7, name: 'Microneedling', description: 'الوخز بالإبر الدقيقة', price: 180, sessionsNumber: 22 },
-    { id: 8, name: 'PRP', description: 'حقن البلازما الغنية بالصفائح', price: 220, sessionsNumber: 3 },
-    { id: 9, name: 'Chemical Peel', description: 'التقشير الكيميائي للبشرة', price: 120, sessionsNumber: 4 },
-    { id: 10, name: 'Mesotherapy', description: 'حقن الميزوثيرابي', price: 160, sessionsNumber: 5 }
-  ];
+export class ServicesComponent implements OnInit {
+  services: Service[] = [];
+  filteredServices: Service[] = [];
 
   // Form data
-  newService: Service = this.getEmptyService();
+  newService: CreateServiceRequest = this.getEmptyService();
   editingService: Service | null = null;
   showAddForm: boolean = false;
   searchTerm: string = '';
   showDeleteModal: boolean = false;
   serviceToDelete: Service | null = null;
+
+  // Loading states
+  loading: boolean = false;
+  submitting: boolean = false;
 
   // Validation errors
   addErrors = {
@@ -54,10 +43,54 @@ export class ServicesComponent {
     description: ''
   };
 
+  // Success message
+  showSuccess: boolean = false;
+  successMessage: string = '';
+
+  constructor(private serviceService: ServiceService) { }
+
+  ngOnInit(): void {
+    this.loadServices();
+  }
+
+  // Load all services
+  loadServices(): void {
+    this.loading = true;
+    this.serviceService.getAllServices().subscribe({
+      next: (services) => {
+        this.services = services;
+        this.filterServices();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading services:', error);
+        this.showErrorMessage('فشل تحميل الخدمات');
+        this.loading = false;
+      }
+    });
+  }
+
+  // Filter services based on search term
+  filterServices(): void {
+    if (!this.searchTerm) {
+      this.filteredServices = [...this.services];
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredServices = this.services.filter(s =>
+        s.name.toLowerCase().includes(term) ||
+        (s.description && s.description.toLowerCase().includes(term))
+      );
+    }
+  }
+
+  // Watch search term changes
+  onSearchChange(): void {
+    this.filterServices();
+  }
+
   // Get empty service template
-  getEmptyService(): Service {
+  getEmptyService(): CreateServiceRequest {
     return {
-      id: 0,
       name: '',
       description: '',
       price: 0,
@@ -65,41 +98,14 @@ export class ServicesComponent {
     };
   }
 
-  // Format amount - removes .00 but keeps decimals when needed
+  // Format amount
   formatAmount(amount: number): string {
     if (amount % 1 === 0) {
-      // Whole number - no decimals
       return amount.toString();
     } else {
-      // Has decimals - show up to 2 decimal places
       return amount.toFixed(2).replace(/\.?0+$/, '');
     }
   }
-
-  // Filter services
-  get filteredServices(): Service[] {
-    let filtered = this.services;
-
-    // Filter by search term
-    if (this.searchTerm) {
-      filtered = filtered.filter(s =>
-        s.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        s.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    }
-
-    return filtered;
-  }
-
-  // Get total services count
-  get totalServices(): number {
-    return this.services.length;
-  }
-
-  // Get total revenue if all services sold once
-  //get totalRevenue(): number {
-  //  return this.services.reduce((sum, s) => sum + s.price, 0);
-  //}
 
   // Toggle add form
   toggleAddForm(): void {
@@ -114,20 +120,25 @@ export class ServicesComponent {
   // Add new service
   addService(): void {
     if (this.validateAddForm()) {
-      this.newService.id = this.getNextId();
-      this.services.push({ ...this.newService });
-      this.newService = this.getEmptyService();
-      this.showAddForm = false;
-      this.resetAddErrors();
-      this.showSuccessMessage('تم إضافة الخدمة بنجاح');
-    }
-  }
+      this.submitting = true;
 
-  // Get next ID
-  getNextId(): number {
-    return this.services.length > 0
-      ? Math.max(...this.services.map(s => s.id)) + 1
-      : 1;
+      this.serviceService.createService(this.newService).subscribe({
+        next: (service) => {
+          this.services.push(service);
+          this.filterServices();
+          this.newService = this.getEmptyService();
+          this.showAddForm = false;
+          this.resetAddErrors();
+          this.showSuccessMessage('تم إضافة الخدمة بنجاح');
+          this.submitting = false;
+        },
+        error: (error) => {
+          console.error('Error adding service:', error);
+          this.showErrorMessage(error.message || 'فشل إضافة الخدمة');
+          this.submitting = false;
+        }
+      });
+    }
   }
 
   // Start editing service
@@ -140,13 +151,33 @@ export class ServicesComponent {
   // Save edited service
   saveEdit(): void {
     if (this.editingService && this.validateEditForm()) {
-      const index = this.services.findIndex(s => s.id === this.editingService!.id);
-      if (index !== -1) {
-        this.services[index] = { ...this.editingService };
-        this.editingService = null;
-        this.resetEditErrors();
-        this.showSuccessMessage('تم تحديث الخدمة بنجاح');
-      }
+      this.submitting = true;
+
+      const updateRequest: UpdateServiceRequest = {
+        name: this.editingService.name,
+        description: this.editingService.description,
+        price: this.editingService.price,
+        sessionsNumber: this.editingService.sessionsNumber
+      };
+
+      this.serviceService.updateService(this.editingService.id, updateRequest).subscribe({
+        next: (updatedService) => {
+          const index = this.services.findIndex(s => s.id === updatedService.id);
+          if (index !== -1) {
+            this.services[index] = updatedService;
+            this.filterServices();
+          }
+          this.editingService = null;
+          this.resetEditErrors();
+          this.showSuccessMessage('تم تحديث الخدمة بنجاح');
+          this.submitting = false;
+        },
+        error: (error) => {
+          console.error('Error updating service:', error);
+          this.showErrorMessage(error.message || 'فشل تحديث الخدمة');
+          this.submitting = false;
+        }
+      });
     }
   }
 
@@ -170,10 +201,23 @@ export class ServicesComponent {
   // Confirm delete
   confirmDelete(): void {
     if (this.serviceToDelete) {
-      this.services = this.services.filter(s => s.id !== this.serviceToDelete!.id);
-      this.showSuccessMessage('تم حذف الخدمة بنجاح');
-      this.showDeleteModal = false;
-      this.serviceToDelete = null;
+      this.submitting = true;
+
+      this.serviceService.deleteService(this.serviceToDelete.id).subscribe({
+        next: () => {
+          this.services = this.services.filter(s => s.id !== this.serviceToDelete!.id);
+          this.filterServices();
+          this.showSuccessMessage('تم حذف الخدمة بنجاح');
+          this.showDeleteModal = false;
+          this.serviceToDelete = null;
+          this.submitting = false;
+        },
+        error: (error) => {
+          console.error('Error deleting service:', error);
+          this.showErrorMessage(error.message || 'فشل حذف الخدمة');
+          this.submitting = false;
+        }
+      });
     }
   }
 
@@ -182,7 +226,6 @@ export class ServicesComponent {
     let isValid = true;
     this.resetAddErrors();
 
-    // Validate name
     if (!this.newService.name.trim()) {
       this.addErrors.name = 'الرجاء إدخال اسم الخدمة';
       isValid = false;
@@ -191,7 +234,6 @@ export class ServicesComponent {
       isValid = false;
     }
 
-    // Validate price
     if (this.newService.price === null || this.newService.price === undefined) {
       this.addErrors.price = 'الرجاء إدخال السعر';
       isValid = false;
@@ -200,8 +242,9 @@ export class ServicesComponent {
       isValid = false;
     }
 
-    // Validate sessions number (optional but if provided must be valid)
-    if (this.newService.sessionsNumber !== null && this.newService.sessionsNumber !== undefined && this.newService.sessionsNumber < 0) {
+    if (this.newService.sessionsNumber !== null &&
+      this.newService.sessionsNumber !== undefined &&
+      this.newService.sessionsNumber < 0) {
       this.addErrors.sessionsNumber = 'عدد الجلسات يجب أن يكون صفر أو أكثر';
       isValid = false;
     }
@@ -216,7 +259,6 @@ export class ServicesComponent {
 
     if (!this.editingService) return false;
 
-    // Validate name
     if (!this.editingService.name.trim()) {
       this.editErrors.name = 'الرجاء إدخال اسم الخدمة';
       isValid = false;
@@ -225,7 +267,6 @@ export class ServicesComponent {
       isValid = false;
     }
 
-    // Validate price
     if (this.editingService.price === null || this.editingService.price === undefined) {
       this.editErrors.price = 'الرجاء إدخال السعر';
       isValid = false;
@@ -234,8 +275,9 @@ export class ServicesComponent {
       isValid = false;
     }
 
-    // Validate sessions number (optional but if provided must be valid)
-    if (this.editingService.sessionsNumber !== null && this.editingService.sessionsNumber !== undefined && this.editingService.sessionsNumber < 0) {
+    if (this.editingService.sessionsNumber !== null &&
+      this.editingService.sessionsNumber !== undefined &&
+      this.editingService.sessionsNumber < 0) {
       this.editErrors.sessionsNumber = 'عدد الجلسات يجب أن يكون صفر أو أكثر';
       isValid = false;
     }
@@ -265,7 +307,9 @@ export class ServicesComponent {
         }
         break;
       case 'sessionsNumber':
-        if (this.newService.sessionsNumber !== null && this.newService.sessionsNumber !== undefined && this.newService.sessionsNumber < 0) {
+        if (this.newService.sessionsNumber !== null &&
+          this.newService.sessionsNumber !== undefined &&
+          this.newService.sessionsNumber < 0) {
           this.addErrors.sessionsNumber = 'عدد الجلسات يجب أن يكون صفر أو أكثر';
         } else {
           this.addErrors.sessionsNumber = '';
@@ -298,7 +342,9 @@ export class ServicesComponent {
         }
         break;
       case 'sessionsNumber':
-        if (this.editingService.sessionsNumber !== null && this.editingService.sessionsNumber !== undefined && this.editingService.sessionsNumber < 0) {
+        if (this.editingService.sessionsNumber !== null &&
+          this.editingService.sessionsNumber !== undefined &&
+          this.editingService.sessionsNumber < 0) {
           this.editErrors.sessionsNumber = 'عدد الجلسات يجب أن يكون صفر أو أكثر';
         } else {
           this.editErrors.sessionsNumber = '';
@@ -326,10 +372,7 @@ export class ServicesComponent {
     };
   }
 
-  // Success message handling
-  showSuccess: boolean = false;
-  successMessage: string = '';
-
+  // Success message
   showSuccessMessage(message: string): void {
     this.successMessage = message;
     this.showSuccess = true;
@@ -338,8 +381,18 @@ export class ServicesComponent {
     }, 3000);
   }
 
+  // Error message
+  showErrorMessage(message: string): void {
+    this.successMessage = message;
+    this.showSuccess = true;
+    setTimeout(() => {
+      this.showSuccess = false;
+    }, 5000);
+  }
+
   // Reset filters
   resetFilters(): void {
     this.searchTerm = '';
+    this.filterServices();
   }
 }
