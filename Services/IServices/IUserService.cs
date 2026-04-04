@@ -11,6 +11,6 @@ namespace VelvetSkinClinic.Services.IServices
         Task<UserDto> GetUserByIdAsync(int id);
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<bool> LoginExistsAsync(string loginCustom);
-
+        Task ChangePasswordAsync(ChangePasswordRM request);
     }
 }

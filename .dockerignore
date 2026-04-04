@@ -1,0 +1,6 @@
+bin/
+obj/
+*.user
+*.http
+.github/
+appsettings.Development.json

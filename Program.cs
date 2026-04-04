@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using VelvetSkinClinic.helpersModels;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var _config = builder.Configuration;
@@ -92,7 +93,11 @@ builder.Services.AddScoped<IClientService,  ClientService>();
 builder.Services.AddScoped<IReportService,  ReportService>();
 
 builder.Services.AddDbContext<VelvetSkinClinicContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+  //  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Avant builder.Build()
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

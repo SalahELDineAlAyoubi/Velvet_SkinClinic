@@ -70,6 +70,57 @@ namespace VelvetSkinClinic.Services
             return user != null ? MapToDto(user) : null;
         }
 
+        public async Task ChangePasswordAsync(ChangePasswordRM request)
+        {
+            var user = await _unitOfWork.UsersRepository.FirstOrDefaultAsync(u => u.LoginCustom == request.Login);
+            if (user == null)
+                throw new Exception("User not found.");
+
+            _passwordService.CreatePasswordHash(request.NewPassword, out string newHash, out string newSalt);
+            user.PasswordHash = newHash;
+            user.PasswordSalt = newSalt;
+
+            _unitOfWork.UsersRepository.Update(user);
+            await _unitOfWork.CompleteAsync();
+        }
+        //public async Task<UserDto> CreateUserAppAsync(CreateUserAppRM model)
+        //{
+        //    // Check if login already exists
+        //    var existing = await _unitOfWork.UsersRepository
+        //        .FirstOrDefaultAsync(u => u.LoginCustom == model.LoginCustom);
+        //    if (existing != null)
+        //        throw new InvalidOperationException("Login already exists");
+
+        //    // Generate password hash and salt
+        //    _passwordService.CreatePasswordHash(model.Password, out string passwordHash, out string passwordSalt);
+
+        //    var user = new User
+        //    {
+        //        FirstName = model.FirstName,
+        //        LastName = model.LastName,
+        //        LoginCustom = model.LoginCustom,
+        //        PasswordHash = passwordHash,
+        //        PasswordSalt = passwordSalt,
+        //        UserRole = (int)model.UserRole,
+        //        IsActif = true,
+        //        EntryDate = DateTime.Now
+        //    };
+
+        //    await _unitOfWork.UsersRepository.AddAsync(user);
+        //    await _unitOfWork.CompleteAsync();
+
+        //    return new UserDto
+        //    {
+        //        Id=user.Id,
+        //        FirstName = user.FirstName,
+        //        LastName = user.LastName,
+        //        LoginCustom = user.LoginCustom,
+        //        UserRole = user.UserRole,
+        //        IsActif = user.IsActif,
+        //        EntryDate = user.EntryDate
+        //    };
+        //}
+
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var users = await _unitOfWork.UsersRepository.GetAllAsync();
