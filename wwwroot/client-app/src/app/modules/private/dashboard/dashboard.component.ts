@@ -120,6 +120,10 @@ export class DashboardComponent implements OnInit {
 
   // Validate Lebanese phone number
   validateLebanesePhone(phone: string): boolean {
+    if (!/^[0-9]+$/.test(phone)) {
+      return false;
+    }
+
     const cleanPhone = phone.replace(/\s+/g, '').replace(/[^0-9]/g, '');
     const mobilePattern = /^(03|70|71|76|78|79|81)\d{6}$/;
     const landlinePattern = /^(01|04|05|06|07|09)\d{6}$/;
@@ -166,7 +170,9 @@ export class DashboardComponent implements OnInit {
       this.formErrors.phone = 'رقم الهاتف غير صحيح. يجب أن يكون رقم لبناني صحيح';
       isValid = false;
     }
-
+    else {
+      this.formErrors.phone = '';
+    }
     return isValid;
   }
 

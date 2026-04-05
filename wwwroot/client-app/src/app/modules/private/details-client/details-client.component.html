@@ -289,7 +289,7 @@
 
     <!-- Success Message -->
     <div class="success-msg" *ngIf="showSuccess">
-      تم إضافة الدفعة بنجاح ✓
+      {{successMessage}}
     </div>
 
     <!-- Delete Client Confirmation Modal -->
@@ -336,7 +336,7 @@
           <div class="delete-confirmation">
             <div class="warning-icon">🗑️</div>
             <h4>هل أنت متأكد من حذف هذه الخدمة؟</h4>
-            <p class="service-name-highlight">{{ serviceToDelete }}</p>
+            <p class="service-name-highlight">{{ serviceToDelete?.name }}</p>
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MonthlyReport, MonthlyReportRequest } from '../models/report.models';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
  
 @Injectable({
   providedIn: 'root'
