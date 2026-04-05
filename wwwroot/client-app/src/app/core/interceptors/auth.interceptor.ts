@@ -26,7 +26,11 @@ export class AuthInterceptor implements HttpInterceptor {
       
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 && !request.url.includes('/auth/login')) {
+        if(
+          error.status === 401 &&
+          !request.url.includes('/auth/login') &&
+          !request.url.includes('/auth/refresh-token')  // ✅ ADD THIS
+        ) {
           return this.handle401Error(request, next);
         }
         return throwError(() => error);
@@ -56,11 +60,15 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
         catchError((err) => {
           this.isRefreshing = false;
+          // ✅ Reset subject so it works again after re-login
+          this.refreshTokenSubject = new BehaviorSubject<any>(null);
           this.authService.logout();
           return throwError(() => err);
         })
       );
     } else {
+      // ✅ Queue concurrent requests until new token is available
+
       return this.refreshTokenSubject.pipe(
         filter(token => token != null),
         take(1),

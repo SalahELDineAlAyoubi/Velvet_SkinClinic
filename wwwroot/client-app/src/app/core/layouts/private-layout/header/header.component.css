@@ -98,6 +98,8 @@
   animation: slideDown 0.3s ease;
   display: block !important;
 }
+ 
+
 
 @keyframes slideDown {
   from {
@@ -202,8 +204,12 @@
 @media (max-width: 768px) {
   .notifications-dropdown {
     min-width: 280px;
-    max-width: 90vw;
-    right: -10px;
+    max-height: 60vh;
+    right: 8px;
+    position: fixed;
+    top: 70px;
+    left: 8px;
+    width: auto;
   }
 
   .notification-item {
@@ -318,19 +324,6 @@
   }
 }
 
-.notifications-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 10px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  width: 320px;
-  max-height: 400px;
-  overflow: hidden;
-  z-index: 1000;
-}
 
 .notifications-header {
   padding: 12px 16px;
