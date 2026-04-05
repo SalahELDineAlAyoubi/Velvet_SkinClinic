@@ -20,9 +20,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    //const storedUser = localStorage.getItem('currentUser');
-    const storedUser = ' ';
-
+    const storedUser = localStorage.getItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<User | null>(
       storedUser ? JSON.parse(storedUser) : null
     );
@@ -57,7 +55,7 @@ export class AuthService {
             userRole: response.userRole
           };
 
-          //localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
 
            this.startRefreshTokenTimer();
@@ -101,26 +99,24 @@ export class AuthService {
     }
 
     this.stopRefreshTokenTimer();
-    //localStorage.removeItem('access_token');
-    //localStorage.removeItem('refresh_token');
-    //localStorage.removeItem('currentUser');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
 
 
   getToken(): string | null {
-    return ''
-    //return localStorage.getItem('access_token');
+    return localStorage.getItem('access_token');
   }
 
   getRefreshToken(): string | null {
-    //return localStorage.getItem('refresh_token');
-  return ''
+    return localStorage.getItem('refresh_token');
   }
   private setTokens(accessToken: string, refreshToken: string): void {
-    //localStorage.setItem('access_token', accessToken);
-    //localStorage.setItem('refresh_token', refreshToken);
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
   }
   private startRefreshTokenTimer(): void {
     const timeout = environment.refreshTokenTimeOut * 60 * 1000;  
