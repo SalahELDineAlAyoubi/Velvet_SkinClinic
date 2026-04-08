@@ -1,6 +1,6 @@
 
 export const environment = {
-  apiUrl: 'https://velvet-skinclinic.onrender.com/api/',
+  apiUrl: 'https://velvet-skinclinic.fly.dev/api/',
   refreshTokenTimeOut: 14
 };
 
